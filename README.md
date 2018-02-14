@@ -1,10 +1,10 @@
-meta-axxia-rdk
+meta-intel-axxia-rdk
 ==============
 
 This layer adds build instructions to the meta-intel-axxia layer to create an
 'in-distribution' image.
 
-When applied, meta-axxia-rdk provides support for creating a distribution that
+When applied, meta-intel-axxia-rdk provides support for creating a distribution that
 adds out-of-tree RDK kernel level modules to the resulting image. The RDK kernel
 modules also get loaded on boot-up.
 
@@ -19,15 +19,15 @@ to apply this layer.
 
 ## Sources
 
-The Intel github.com repositories provide meta-axxia-rdk. To access the
+The Intel github.com repositories provide meta-intel-axxia-rdk. To access the
 private repository, request permission from Intel. Note that the
 private repository is used for development and is not supported.
 
-git clone https://github.com/axxia/meta-axxia-rdk_private.git meta-axxia-rdk
+git clone https://github.com/axxia/meta-intel-axxia-rdk_private.git meta-intel-axxia-rdk
 
 The public Intel repository contains _TODO: confirm purpose_
 
-git clone https://github.com/axxia/meta-axxia-rdk.git
+git clone https://github.com/axxia/meta-intel-axxia-rdk.git
 
 In all cases, use the 'rocko' branch. The commit used as HEAD for a
 particular release will be listed in the release notes.
@@ -42,7 +42,7 @@ select the right meta-intel-axxia repository, branch, and version.
 ```
    $ cd $YOCTO/poky
    $ <the git clone command chosen above>
-   $ cd meta-axxia-rdk
+   $ cd meta-intel-axxia-rdk
    $ git checkout rocko
    $ mkdir downloads
    $ cd downloads
@@ -71,7 +71,7 @@ actual value you provided in step 1.
             $YOCTO/poky/meta-intel \
             $YOCTO/poky/meta-intel-axxia \
             $YOCTO/poky/meta-intel-axxia/meta-intel-snr \
-            $YOCTO/poky/meta-axxia-rdk \
+            $YOCTO/poky/meta-intel-axxia-rdk \
             "
 ```
 9: Edit the conf/local.conf file:
@@ -81,5 +81,7 @@ actual value you provided in step 1.
 ```
 
 9.1: Set distribution configuration to have all Axxia specific features.
+
+To build an in-distribution image:
 
     DISTRO = "intel-axxia-indist"
