@@ -1,10 +1,10 @@
-meta-axxia-rdk
+meta-intel-axxia-rdk
 ==============
 
 This layer adds build instructions to the meta-axxia layer to create an
 'in-distribution' image.
 
-When applied, meta-axxia-rdk provides support for creating a distribution that
+When applied, meta-intel-axxia-rdk provides support for creating a distribution that
 adds out-of-tree RDK kernel level modules to the resulting image. The RDK kernel
 modules also get loaded on boot-up.
 
@@ -19,31 +19,36 @@ to apply this layer.
 
 ## Sources
 
-The Intel github.com repositories provide meta-axxia-rdk. To access the
-private repository, request permission from Intel. Note that the
-private repository is used for development and is not supported.
+### In-Distribution builds
+For in-distribution builds, the Intel github.com repositories provide two layer
+variants : meta-intel-axxia-rdk and meta-intel-axxia-rdk_private.  Unless
+instructed otherwise, the publicly-available meta-intel-axxia-rdk should be
+used to provide in-distribution support. 
 
-git clone https://github.com/axxia/meta-axxia-rdk_private.git meta-axxia-rdk
+```
+git clone https://github.com/axxia/meta-intel-axxia-rdk.git
+```
 
-The public Intel repository contains _TODO: confirm purpose_
+The private repository is used for development and is not supported.
+To access the private repository, request permission from Intel. 
 
-git clone https://github.com/axxia/meta-axxia-rdk.git
+```
+git clone https://github.com/axxia/meta-intel-axxia-rdk_private.git meta-intel-axxia-rdk
+```
 
-In all cases, use the 'morty' branch. The commit used as HEAD for a
-particular release will be listed in the release notes.
-
+In all cases, use the 'morty' branch or the tag specified in the release notes.
 
 ## Building the meta-axxia BSP layer
 
-3a: Clone the Axxia RDK meta layer. This provides meta data for building
+3.1: Clone the Axxia RDK meta layer. This provides meta data for building
 in-distribution images for the Axxia specific board types.  See 'Sources' above to
 select the right meta-axxia repository, branch, and version.
 
 ```
    $ cd $YOCTO/poky
    $ <the git clone command chosen above>
-   $ cd meta-axxia-rdk
-   $ git checkout morty
+   $ cd meta-intel-axxia-rdk
+   $ git checkout morty (or git checkout tags/$TAG)
    $ mkdir downloads
    $ cd downloads
    $ cp /your/path/to/rdk_klm_src_<releaseinfo>.txz .
@@ -70,7 +75,7 @@ actual value you provided in step 1.
             $YOCTO/poky/meta-virtualization \
             $YOCTO/poky/meta-intel \
             $YOCTO/poky/meta-axxia \
-            $YOCTO/poky/meta-axxia-rdk \
+            $YOCTO/poky/meta-intel-axxia-rdk \
             "
 ```
 9: Edit the conf/local.conf file:
