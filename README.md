@@ -48,7 +48,7 @@ select the right meta-axxia repository, branch, and version.
    $ cd $YOCTO/poky
    $ <the git clone command chosen above>
    $ cd meta-intel-axxia-rdk
-   $ git checkout morty (or git checkout tags/$TAG)
+   $ git checkout morty (or git checkout tags/<tag from the release notes>)
    $ mkdir downloads
    $ cd downloads
    $ cp /your/path/to/rdk_klm_src_<releaseinfo>.txz .
