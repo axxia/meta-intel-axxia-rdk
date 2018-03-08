@@ -46,7 +46,7 @@ in-distribution images for the Axxia specific board types.  See 'Sources' above 
 select the right meta-intel-axxia repository, branch, and version.
 
 ```
-   $ cd $YOCTO/poky
+   $ cd $YOCTO
    $ <the git clone command chosen above>
    $ cd meta-intel-axxia-rdk
    $ git checkout rocko (or git checkout tags/<tag from the release notes>)
@@ -70,14 +70,15 @@ actual value you provided in step 1.
    BBLAYERS ?= " \
             $YOCTO/poky/meta \
             $YOCTO/poky/meta-poky \
-            $YOCTO/poky/meta-openembedded/meta-oe \
-            $YOCTO/poky/meta-openembedded/meta-python \
-            $YOCTO/poky/meta-openembedded/meta-networking \
-            $YOCTO/poky/meta-virtualization \
-            $YOCTO/poky/meta-intel \
-            $YOCTO/poky/meta-intel-axxia \
-            $YOCTO/poky/meta-intel-axxia/meta-intel-snr \
-            $YOCTO/poky/meta-intel-axxia-rdk \
+            $YOCTO/meta-openembedded/meta-oe \
+            $YOCTO/meta-openembedded/meta-networking \
+            $YOCTO/meta-openembedded/meta-filesystems \
+            $YOCTO/meta-openembedded/meta-python \
+            $YOCTO/meta-virtualization \
+            $YOCTO/meta-intel \
+            $YOCTO/meta-intel-axxia \
+            $YOCTO/meta-intel-axxia/meta-intel-snr \
+            $YOCTO/meta-intel-axxia-rdk \
             "
 ```
 9: Edit the conf/local.conf file:
