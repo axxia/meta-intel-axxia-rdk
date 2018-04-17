@@ -92,3 +92,7 @@ actual value you provided in step 1.
 To build an in-distribution image:
 
     DISTRO = "intel-axxia-indist"
+
+9.2: Set the release info for RDK modules from rdk_klm_src* archive
+
+    RDK_VERSION = "<releaseinfo>"
