@@ -1,5 +1,5 @@
 meta-intel-axxia-rdk
-==============
+====================
 
 This layer adds build instructions to the meta-intel-axxia layer to create an
 'in-distribution' image.
@@ -12,7 +12,7 @@ Use of this layer assumes that you are being supplied with the relevant kernel
 module source code release archives directly from Intel.
 
 Updates to meta-intel-axxia README
-============================
+==================================
 
 This section contains updates and additions to the meta-intel-axxia README, needed 
 to apply this layer.
@@ -95,4 +95,4 @@ To build an in-distribution image:
 
 9.2: Set the release info for RDK modules from rdk_klm_src* archive
 
-    RDK_VERSION = "<releaseinfo>"
+    RDK_KLM_VERSION = "<releaseinfo>"

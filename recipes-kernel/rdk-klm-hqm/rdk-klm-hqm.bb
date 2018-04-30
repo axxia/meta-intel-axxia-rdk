@@ -3,7 +3,7 @@ DESCRIPTION="kernel module that supports configuration and use of the HQM device
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb723b61539feef013de476e68b5c50a"
 
-SRC_URI = "file://${RDK_ARCHIVE}"
+SRC_URI = "file://${RDK_KLM_ARCHIVE}"
 
 FILESEXTRAPATHS_prepend := "${RDK_ARCHIVE_PATH}:"
 

@@ -1,10 +1,10 @@
 FILESEXTRAPATHS_prepend := "${RDK_ARCHIVE_PATH}:${THISDIR}/frags:"
 
 SRC_URI_append_axxiax86-64 = " \
-    file://${RDK_ARCHIVE} \
+    file://${RDK_KLM_ARCHIVE} \
     file://rdk-modules.scc "
 
-RDK_VERSION ?= "unknown-release-info"
+RDK_KLM_VERSION ?= "unknown-release-info"
 
 do_patch_rdk_modules () {
     cd ${STAGING_KERNEL_DIR}
@@ -26,7 +26,7 @@ do_patch_rdk_modules () {
             git add -f drivers/crypto/qat/qat_common/*-asn1.[ch]
         fi
  
-        TIPC="$(echo ${KLMC} | tr '[:lower:]' '[:upper:]') ${RDK_VERSION}"
+        TIPC="$(echo ${KLMC} | tr '[:lower:]' '[:upper:]') ${RDK_KLM_VERSION}"
         git commit -m "${TIPC}" -m "NOT FOR RELEASE"
     done
 

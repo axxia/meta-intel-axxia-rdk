@@ -3,7 +3,7 @@ DESCRIPTION="kernel module that supports Network Interface and Scheduler (ice_sw
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a0f4197bee94e470f89d986fcba24e41"
 
-SRC_URI = "file://${RDK_ARCHIVE}"
+SRC_URI = "file://${RDK_KLM_ARCHIVE}"
 
 FILESEXTRAPATHS_prepend := "${RDK_ARCHIVE_PATH}:"
 

@@ -3,7 +3,7 @@ DESCRIPTION="USDM kernel module"
 LICENSE = "GPLv2 & BSD"
 LIC_FILES_CHKSUM = "file://${WORKDIR}/qat/LICENSE.GPL;md5=751419260aa954499f7abaabaa882bbe"
 
-SRC_URI = "file://${RDK_ARCHIVE}"
+SRC_URI = "file://${RDK_KLM_ARCHIVE}"
 
 FILESEXTRAPATHS_prepend := "${RDK_ARCHIVE_PATH}:"
 
