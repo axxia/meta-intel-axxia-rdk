@@ -73,6 +73,8 @@ select the right meta-intel-axxia repository, branch, and version.
    $ ln -s rdk_klm_src_<releaseinfo>.txz rdk_klm_src.tar.xz
    $ cp /your/path/to/rdk_user_src_<releaseinfo>.txz .
    $ ln -s rdk_user_src_<releaseinfo>.txz rdk_user_src.tar.xz
+   $ cp /your/path/to/dpdk_diff_<releaseinfo>.patch .
+   $ ln -s dpdk_diff_<releaseinfo>.patch dpdk_diff.patch
 ```
 
 2: Clone the DPDK meta layer. It provides dpdk recipes from upstream. It has only
