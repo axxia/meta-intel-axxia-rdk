@@ -22,12 +22,6 @@ URI: https://github.com/axxia/meta-intel-axxia.git
 branch: rocko
 revision: snr_delivery13_linux4_12
 
-Meta DPDK Layer (Yocto)
------------------------
-URI: https://git.yoctoproject.org/cgit/cgit.cgi/meta-dpdk
-branch: master
-revision: 9d2d7a606278131479cc5b6c8cad65ddea3ff9f6
-
 Updates to meta-intel-axxia README
 ==================================
 
@@ -75,23 +69,15 @@ select the right meta-intel-axxia repository, branch, and version.
    $ ln -s rdk_user_src_<releaseinfo>.txz rdk_user_src.tar.xz
 ```
 
-2: Clone the DPDK meta layer. It provides dpdk recipes from upstream. It has only
-master branch so no checkout required.
-
-```
-   $ cd $YOCTO
-   $ git clone https://git.yoctoproject.org/cgit/cgit.cgi/meta-dpdk
-```
-
-3: Edit the conf/bblayers.conf file
+2: Edit the conf/bblayers.conf file
 
 ```
    $ pwd (you should be at $YOCTO/axxia)
    $ vi conf/bblayers.conf
 ```
 
-4: Edit BBLAYERS variable as follows. Replace references to $YOCTO below with the
-actual value you provided in step 1.
+3: Edit BBLAYERS variable as follows. Replace references to $YOCTO
+   below with the actual value you provided in step 1.
 
 ```
    BBLAYERS ?= " \
@@ -105,7 +91,6 @@ actual value you provided in step 1.
             $YOCTO/meta-intel \
             $YOCTO/meta-intel-axxia \
             $YOCTO/meta-intel-axxia/meta-intel-snr \
-            $YOCTO/meta-dpdk \
             $YOCTO/meta-intel-axxia-rdk \
             "
 ```
