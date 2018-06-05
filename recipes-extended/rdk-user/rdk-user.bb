@@ -7,6 +7,9 @@ SRC_URI = "file://${RDK_USER_ARCHIVE}"
 
 FILESEXTRAPATHS_prepend := "${RDK_ARCHIVE_PATH}:"
 
+RDK_USER_VERSION ?= "unknown_release_info"
+PR = "${RDK_USER_VERSION}"
+
 DEPENDS = "virtual/libibverbs libpcap openssl"
 
 inherit module
