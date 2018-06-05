@@ -1,7 +1,7 @@
 SUMMARY = "Intel RDK user-space modules"
 DESCRIPTION = "Intel RDK is a set of user-space modules on top of the base DPDK package"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/Makefile;md5=1107ec5edff8481768375b570f049d57"
+LIC_FILES_CHKSUM = "file://${WORKDIR}/Makefile;md5=a68eda5604f811432718f52a016aec14"
 
 SRC_URI = "file://${RDK_USER_ARCHIVE}"
 
