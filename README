@@ -20,7 +20,7 @@ Meta Intel Axxia Layer (and its dependencies)
 ---------------------------------------------
 URI: https://github.com/axxia/meta-intel-axxia.git
 branch: rocko
-revision: snr_delivery13_linux4_12
+revision: snr_delivery13.1_linux4_12 in meta-intel-axxia
 
 Updates to meta-intel-axxia README
 ==================================
@@ -65,8 +65,6 @@ select the right meta-intel-axxia repository, branch, and version.
    $ cd downloads
    $ cp /your/path/to/rdk_klm_src_<releaseinfo>.txz .
    $ ln -s rdk_klm_src_<releaseinfo>.txz rdk_klm_src.tar.xz
-   $ cp /your/path/to/rdk_user_src_<releaseinfo>.txz .
-   $ ln -s rdk_user_src_<releaseinfo>.txz rdk_user_src.tar.xz
 ```
 
 2: Edit the conf/bblayers.conf file
