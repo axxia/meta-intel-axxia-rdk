@@ -35,5 +35,5 @@ do_patch_rdk_modules () {
     fi
 }
 
-addtask do_patch_rdk_modules after do_patch before do_kernel_configme
-do_kernel_configme[depends] += "${PN}:do_patch_rdk_modules"
+addtask do_patch_rdk_modules after do_kernel_metadata before do_patch
+do_patch[depends] += "${PN}:do_patch_rdk_modules"
