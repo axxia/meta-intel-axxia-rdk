@@ -27,7 +27,7 @@ do_patch_rdk_modules () {
         fi
  
         TIPC="$(echo ${KLMC} | tr '[:lower:]' '[:upper:]') ${RDK_KLM_VERSION}"
-        git commit -m "${TIPC}" -m "NOT FOR RELEASE"
+        git commit --author="Intel <axxia@intel.com>" -m "${TIPC}" -m "NOT FOR RELEASE"
     done
 
     if [ "yes" = "${CHANGES}" ]; then
