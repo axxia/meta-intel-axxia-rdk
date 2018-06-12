@@ -4,7 +4,8 @@ SRC_URI_append_axxiax86-64 = " \
     file://${RDK_KLM_ARCHIVE} \
     file://rdk-modules.scc "
 
-RDK_KLM_VERSION ?= "unknown-release-info"
+META_INTEL_AXXIA_RDK_LAYER_PATH:="${THISDIR}"
+export META_INTEL_AXXIA_RDK_LAYER_PATH
 
 do_patch_rdk_modules () {
     cd ${STAGING_KERNEL_DIR}
@@ -12,6 +13,9 @@ do_patch_rdk_modules () {
         git stash
         CHANGES=yes
     fi
+
+    RDK_KLM_VERSION=$(git -C ${META_INTEL_AXXIA_RDK_LAYER_PATH} describe --dirty)
+    echo ${RDK_KLM_VERSION}
 
     for KLMC in cpk cpk-ae hqm ies qat
     do
