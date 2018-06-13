@@ -1,5 +1,5 @@
 FILESEXTRAPATHS_prepend := "${RDK_ARCHIVE_PATH}:${THISDIR}/frags:\
-${THISDIR}/patches:"
+${THISDIR}/patches"
 
 SRC_URI_append_axxiax86-64 = " \
     file://Backport-ice-linux-Fix-IDC-ADK-TX-path.patch \
