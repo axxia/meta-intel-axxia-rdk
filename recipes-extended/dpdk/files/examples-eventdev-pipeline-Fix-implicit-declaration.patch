@@ -1,0 +1,42 @@
+From d6f7b743732154b9307ea32dbf333e81d62384bf Mon Sep 17 00:00:00 2001
+From: Daniel Dragomir <daniel.dragomir@windriver.com>
+Date: Fri, 25 May 2018 17:11:01 +0300
+Subject: [PATCH] examples/eventdev*pipeline: Fix implicit declaration of
+ functions
+
+Include ctype header to avoid implicit declaration of function
+'isdigit' 'isupper' 'isblank' 'isxdigit' error.
+
+Signed-off-by: Daniel Dragomir <daniel.dragomir@windriver.com>
+---
+ examples/eventdev_pipeline/coremask.c     | 1 +
+ examples/eventdev_svc_pipeline/coremask.c | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/examples/eventdev_pipeline/coremask.c b/examples/eventdev_pipeline/coremask.c
+index a331a5c..981e84a 100644
+--- a/examples/eventdev_pipeline/coremask.c
++++ b/examples/eventdev_pipeline/coremask.c
+@@ -34,6 +34,7 @@
+ #include <stdint.h>
+ #include <string.h>
+ #include <rte_eal.h>
++#include <ctype.h>
+ 
+ #include "coremask.h"
+ 
+diff --git a/examples/eventdev_svc_pipeline/coremask.c b/examples/eventdev_svc_pipeline/coremask.c
+index a331a5c..981e84a 100644
+--- a/examples/eventdev_svc_pipeline/coremask.c
++++ b/examples/eventdev_svc_pipeline/coremask.c
+@@ -34,6 +34,7 @@
+ #include <stdint.h>
+ #include <string.h>
+ #include <rte_eal.h>
++#include <ctype.h>
+ 
+ #include "coremask.h"
+ 
+-- 
+2.7.4
+
