@@ -13,6 +13,8 @@ do_patch_rdk_modules () {
         CHANGES=yes
     fi
 
+    git tag before_rdk_commits
+
     for KLMC in cpk cpk-ae hqm ies qat
     do
         ${WORKDIR}/${KLMC}/scripts/patch_kernel_tree.sh ${STAGING_KERNEL_DIR}
@@ -25,10 +27,13 @@ do_patch_rdk_modules () {
             # 2> Add the -asn1 files to the commit.
             git add -f drivers/crypto/qat/qat_common/*-asn1.[ch]
         fi
- 
+
         TIPC="$(echo ${KLMC} | tr '[:lower:]' '[:upper:]') ${RDK_KLM_VERSION}"
-        git commit -m "${TIPC}" -m "NOT FOR RELEASE"
+        git commit --no-gpg-sign --author="Intel <axxia@intel.com>" \
+                   --message "${TIPC}" --message "NOT FOR UPSTREAMING"
     done
+
+    git tag after_rdk_commits
 
     if [ "yes" = "${CHANGES}" ]; then
         git stash apply
