@@ -4,8 +4,6 @@ SRC_URI_append_axxiax86-64 = " \
     file://${RDK_KLM_ARCHIVE} \
     file://rdk-modules.scc "
 
-RDK_KLM_VERSION ?= "unknown-release-info"
-
 do_patch_rdk_modules () {
     cd ${STAGING_KERNEL_DIR}
     if [ ! -z "$(git status --porcelain)" ]; then
@@ -28,6 +26,8 @@ do_patch_rdk_modules () {
             git add -f drivers/crypto/qat/qat_common/*-asn1.[ch]
         fi
 
+        RDK_KLM_VERSION=$(readlink ${RDK_ARCHIVE_PATH}/${RDK_KLM_ARCHIVE} \
+                        | cut -d'.' -f1 | sed 's/rdk_klm_src_//g')
         TIPC="$(echo ${KLMC} | tr '[:lower:]' '[:upper:]') ${RDK_KLM_VERSION}"
         git commit --no-gpg-sign --author="Intel <axxia@intel.com>" \
                    --message "${TIPC}" --message "NOT FOR UPSTREAMING"

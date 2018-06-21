@@ -123,10 +123,6 @@ To build an in-distribution image:
 
     DISTRO = "intel-axxia-indist"
 
-5.2: Set the release info for RDK modules from rdk_klm_src* archive
-
-    RDK_KLM_VERSION = "<releaseinfo>"
-
-5.3: Set the release info for RDK userspace from rdk_user_src* archive
+5.2: Set the release info for RDK userspace from rdk_user_src* archive
 
     RDK_USER_VERSION = "<releaseinfo>"
