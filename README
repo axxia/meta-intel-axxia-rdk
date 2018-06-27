@@ -22,6 +22,8 @@ URI: https://github.com/axxia/meta-intel-axxia.git
 branch: rocko
 revision: snr_delivery13_linux4_12
 
+This layer recommend (for RDK userspace and dpdk support):
+
 Meta DPDK Layer (Yocto)
 -----------------------
 URI: https://git.yoctoproject.org/cgit/cgit.cgi/meta-dpdk
@@ -111,6 +113,10 @@ actual value you provided in step 1.
             $YOCTO/meta-intel-axxia-rdk \
             "
 ```
+
+Note: meta-dpdk layer is requested if RDK userpsace and/or dpdk support
+      will be enabled (see 5.2 and 5.3)
+
 5: Edit the conf/local.conf file:
 
 ```
@@ -123,6 +129,14 @@ To build an in-distribution image:
 
     DISTRO = "intel-axxia-indist"
 
-5.2: Set the release info for RDK userspace from rdk_user_src* archive
+5.2: Enable RDK-userspace support
+
+    DISTRO_FEATURES_append = " userspace"
+
+5.3: Enable DPDK support (include userspace support)
+
+    DISTRO_FEATURES_append = " dpdk"
+
+5.4: Set the release info for RDK userspace from rdk_user_src* archive
 
     RDK_USER_VERSION = "<releaseinfo>"
