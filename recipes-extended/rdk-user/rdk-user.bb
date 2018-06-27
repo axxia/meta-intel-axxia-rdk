@@ -10,7 +10,7 @@ FILESEXTRAPATHS_prepend := "${RDK_ARCHIVE_PATH}:"
 RDK_USER_VERSION ?= "unknown_release_info"
 PR = "${RDK_USER_VERSION}"
 
-DEPENDS = "libnl libpcap openssl"
+DEPENDS = "virtual/libibverbs libpcap openssl"
 
 inherit module
 
