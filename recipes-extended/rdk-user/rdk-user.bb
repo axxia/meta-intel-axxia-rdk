@@ -10,7 +10,7 @@ FILESEXTRAPATHS_prepend := "${RDK_ARCHIVE_PATH}:"
 RDK_USER_VERSION ?= "unknown_release_info"
 PR = "${RDK_USER_VERSION}"
 
-DEPENDS = "virtual/libibverbs libpcap openssl"
+DEPENDS = "virtual/libibverbs libpcap openssl rsync-native"
 
 inherit module
 
@@ -39,6 +39,9 @@ IES_EXTRA_FLAGS = "host_alias=x86_64-intelaxxia-linux"
 # of some operations, thus force it make to run single-threaded
 QAT_PARALLEL_MAKE = "-j1"
 
+# Don't remove libtool *.la files
+REMOVE_LIBTOOL_LA = "0"
+
 do_compile () {
 	cd ${WORKDIR}
 	oe_runmake cpk-ae-lib
@@ -47,24 +50,26 @@ do_compile () {
 }
 
 do_install () {
-	install -d ${D}${bindir}
-	install -m 0755 ${IES_API_DIR}/bin/cli ${D}${bindir}
-	install -m 0755 ${QAT_DIR}/install/bin/adf_ctl ${D}${bindir}
+	oe_runmake -C ${WORKDIR} install
 
-	install -d ${D}${libdir}
-	install -m 0755 ${LIB_CPKAE_DIR}/libae_client.so ${D}${libdir}
-	install -m 0755 ${QAT_DIR}/install/lib/libipsec_inline.so ${D}${libdir}
-	install -m 0755 ${IES_API_DIR}/lib/libies_sdk-*.so ${D}${libdir}
-	ln -sf $(basename $(ls ${IES_API_DIR}/lib/libies_sdk-*.so)) ${D}${libdir}/libies_sdk.so
+	install -d ${D}${bindir} ${D}${libdir}
+	install -m 0755 ${WORKDIR}/bin/* ${D}${bindir}
+	install -m 0755 ${WORKDIR}/lib/* ${D}${libdir}
 
-	install -d ${D}${includedir} ${D}${includedir}/linux
-	install -m 0644 ${LIB_CPKAE_DIR}/uapi/linux/ice_sw_ae_* ${D}${includedir}/linux
-	install -m 0644 ${LIB_CPKAE_DIR}/libae_client*.h ${D}${includedir}
-	install -m 0644 ${IES_API_DIR}/include/*.h ${D}${includedir}
-	install -m 0644 ${QAT_DIR}/include/*.h ${D}${includedir}
+	install -d ${D}${includedir} ${D}${includedir}/linux ${D}${includedir}/pub
+	install -m 0644 ${WORKDIR}/include/*.h ${D}${includedir}
+	install -m 0644 ${WORKDIR}/include/Makefile ${D}${includedir}
+	install -m 0644 ${WORKDIR}/include/linux/* ${D}${includedir}/linux
+	install -m 0644 ${WORKDIR}/include/pub/* ${D}${includedir}/pub
+
+	# libies_sdk.so shoud be a symlink to the versioned lib
+	ln -sf $(basename ${D}${libdir}/libies_sdk-*.so) ${D}${libdir}/libies_sdk.so
 
 	# remove local rpath to pass QA testing
 	chrpath -d ${D}/${bindir}/cli
+
+	# Remove path to workdir from libtool file to pass QA testing
+	sed -i '/libdir=/d' ${D}${libdir}/libies_sdk.la
 }
 
 FILES_${PN} = " ${bindir} \
@@ -73,7 +78,8 @@ FILES_${PN} = " ${bindir} \
 	${libdir}/libies_sdk-*.so "
 
 FILES_${PN}-dev = " ${includedir} \
-	${libdir}/libies_sdk.so "
+	${libdir}/libies_sdk.so \
+	${libdir}/libies_sdk.la "
 
 INSANE_SKIP_${PN} = "ldflags"
 
