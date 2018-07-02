@@ -13,8 +13,12 @@ do_patch_rdk_modules () {
 
     git tag before_rdk_commits
 
-    for KLMC in cpk cpk-ae hqm ies qat
+    for KLMC in cpk cpk-ae adk_netd hqm ies qat
     do
+	if [ ! -d ${WORKDIR}/${KLMC} ]; then
+	   continue
+	fi
+
         ${WORKDIR}/${KLMC}/scripts/patch_kernel_tree.sh ${STAGING_KERNEL_DIR}
         git add -A
 
