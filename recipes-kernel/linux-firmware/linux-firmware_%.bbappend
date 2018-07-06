@@ -17,4 +17,4 @@ LICENSE_${PN}-klm-qat-license = "Firmware-qat"
 FILES_${PN}-klm-qat = "${nonarch_base_libdir}/firmware/qat*.bin"
 FILES_${PN}-klm-qat-license = "${nonarch_base_libdir}/firmware/LICENCE.qat_firmware"
 
-RDEPENDS_${PN}-klm-qat += "${PN}-klm-qat-license"
+RDEPENDS_${PN}-klm-qat_append = " ${PN}-klm-qat-license"

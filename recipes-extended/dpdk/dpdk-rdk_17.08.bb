@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.GPL;md5=751419260aa954499f7abaabaa882bbe \
                     file://LICENSE.LGPL;md5=4fbd65380cdd255951079008b364516c \
                     file://LICENSE.BSD;md5=701db1808cef1c74d6d226be6fa5be17"
 
-DEPENDS += "rdk-user"
+DEPENDS_append_axxiax86-64 = " rdk-user"
 
 export SYSROOT="${WORKDIR}/recipe-sysroot"
 export LIB_CPKAE_DIR = "${SYSROOT}/usr/lib"
