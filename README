@@ -1,16 +1,13 @@
 meta-intel-axxia-rdk
 ====================
 
-This layer adds build instructions to the meta-intel-axxia layer to
-create an 'in-distribution' image.
+This layer adds the following components to the meta-intel-axxia layer.
 
-When applied, meta-intel-axxia-rdk provides support for creating a
-distribution that adds out-of-tree RDK kernel level modules to the
-resulting image. The RDK kernel modules also get loaded on boot-up.
+  - RDK kernel modules.
+  - [optional] RDK user space components.
+  - [optional] A patched version of DPDK.
 
-Use of this layer assumes that you are being supplied with the
-relevant kernel module source code release archives directly from
-Intel.
+Use of this layer assumes that the RDK relase is available locally.
 
 Dependencies
 ============
@@ -21,9 +18,9 @@ Meta Intel Axxia Layer (and its dependencies)
 ---------------------------------------------
 URI: https://github.com/axxia/meta-intel-axxia.git
 branch: rocko
-revision: snr_delivery13_linux4_12
+revision: snr_delivery14
 
-This layer recommend (for RDK userspace and dpdk support):
+If the patched version of DPDK is included, the following is required.
 
 Meta DPDK Layer (Yocto)
 -----------------------
@@ -35,7 +32,7 @@ Updates to meta-intel-axxia README
 ==================================
 
 This section contains updates and additions to the meta-intel-axxia
-README, needed to apply this layer.
+README, which are needed to apply this layer.
 
 ## Sources
 
@@ -43,7 +40,7 @@ README, needed to apply this layer.
 For in-distribution builds, the Intel github.com repositories provide
 two layer variants : meta-intel-axxia-rdk and
 meta-intel-axxia-rdk_private.  Unless instructed otherwise, the
-publicly-available meta-intel-axxia-rdk should be used to provide
+publicly available meta-intel-axxia-rdk should be used to provide
 in-distribution support.
 
 ```
@@ -77,14 +74,25 @@ release notes.
    $ cd downloads
    $ cp /your/path/to/rdk_klm_src_<releaseinfo>.txz .
    $ ln -s rdk_klm_src_<releaseinfo>.txz rdk_klm_src.tar.xz
+```
+
+   If user space is included, then add the following.
+
+```
    $ cp /your/path/to/rdk_user_src_<releaseinfo>.txz .
    $ ln -s rdk_user_src_<releaseinfo>.txz rdk_user_src.tar.xz
+```
+
+   If DPDK is included, then add the following.
+
+```
    $ cp /your/path/to/dpdk_diff_<releaseinfo>.patch .
    $ ln -s dpdk_diff_<releaseinfo>.patch dpdk_diff.patch
 ```
 
-2: [optional] Clone the DPDK meta layer. It provides dpdk recipes from
-   upstream. It has only master branch so no checkout required.
+2: If DPDK is included, clone the DPDK meta layer. It provides dpdk
+   recipes from upstream. It has only master branch so no checkout
+   required.
 
 ```
    $ cd $YOCTO
@@ -118,7 +126,7 @@ release notes.
             "
 ```
 
-Note: meta-dpdk layer is required if dpdk support is included in
+Note: meta-dpdk layer is only required if dpdk support is included in
       local.conf (see 5.3).
 
 5: Edit the conf/local.conf file:
@@ -129,18 +137,16 @@ Note: meta-dpdk layer is required if dpdk support is included in
 
 5.1: Set distribution configuration to have all Axxia specific features.
 
-To build an in-distribution image:
-
     DISTRO = "intel-axxia-indist"
 
-5.2: Enable RDK-userspace support
+5.2: Enable RDK-userspace support (optional)
 
     DISTRO_FEATURES_append = " userspace"
 
-5.3: Enable DPDK support (userspace support is required for dpdk)
+5.3: Enable DPDK support (optional, userspace support is required for dpdk)
 
     DISTRO_FEATURES_append = " dpdk"
 
-5.4: Set the release info for RDK userspace from rdk_user_src* archive
+5.4: If user space is included, set the release info as follows.
 
     RDK_USER_VERSION = "<releaseinfo>"
