@@ -77,62 +77,12 @@ do_install () {
 	sed -i '/libdir=/d' ${D}${libdir}/libies_sdk.la
 }
 
-FILES_${PN} = " ${bindir} \
-	${sysconfdir}/c4xxx_dev0.conf.haps80.orig \
-	${sysconfdir}/c6xx_dev2.conf \
-	${sysconfdir}/dh895xcc_dev1.conf \
-	${sysconfdir}/d15xxpf_dev0.conf \
-	${sysconfdir}/c4xxx_dev0.conf.haps70 \
-	${sysconfdir}/c3xxxpf_dev0.conf \
-	${sysconfdir}/c3xxxvf_dev0.conf.vm \
-	${sysconfdir}/c4xxxpf_dev0.conf.haps70 \
-	${sysconfdir}/c4xxxpf_dev0.conf.haps80 \
-	${sysconfdir}/c6xx_dev1.conf \
-	${sysconfdir}/c6xx_dev0.conf \
-	${sysconfdir}/c6xxpf_dev0.conf \
-	${sysconfdir}/c4xxxvf_dev0.conf.vm.haps80 \
-	${sysconfdir}/c3xxx_dev0.conf \
-	${sysconfdir}/c4xxx_dev0.conf.haps80 \
-	${sysconfdir}/dh895xccvf_dev0.conf.vm \
-	${sysconfdir}/d15xx_dev0.conf \
-	${sysconfdir}/c4xxxvf_dev0.conf.vm \
-	${sysconfdir}/c4xxx_dev0.conf \
-	${sysconfdir}/dh895xcc_dev0.conf \
-	${sysconfdir}/c4xxxpf_dev0.conf \
-	${sysconfdir}/c6xxvf_dev0.conf.vm \
-	${sysconfdir}/c4xxxvf_dev0.conf.vm.haps70 \
-	${sysconfdir}/d15xxvf_dev0.conf.vm \
-	${sysconfdir}/dh895xccpf_dev0.conf \
+FILES_${PN} = " ${bindir} ${sysconfdir} \
 	${libdir}/libae_client.so \
 	${libdir}/libipsec_inline.so \
 	${libdir}/libies_sdk-*.so "
 
 FILES_${PN}-dev = " ${includedir} \
-	${sysconfdir}/c4xxx_dev0.conf.haps80.orig \
-	${sysconfdir}/c6xx_dev2.conf \
-	${sysconfdir}/dh895xcc_dev1.conf \
-	${sysconfdir}/d15xxpf_dev0.conf \
-	${sysconfdir}/c4xxx_dev0.conf.haps70 \
-	${sysconfdir}/c3xxxpf_dev0.conf \
-	${sysconfdir}/c3xxxvf_dev0.conf.vm \
-	${sysconfdir}/c4xxxpf_dev0.conf.haps70 \
-	${sysconfdir}/c4xxxpf_dev0.conf.haps80 \
-	${sysconfdir}/c6xx_dev1.conf \
-	${sysconfdir}/c6xx_dev0.conf \
-	${sysconfdir}/c6xxpf_dev0.conf \
-	${sysconfdir}/c4xxxvf_dev0.conf.vm.haps80 \
-	${sysconfdir}/c3xxx_dev0.conf \
-	${sysconfdir}/c4xxx_dev0.conf.haps80 \
-	${sysconfdir}/dh895xccvf_dev0.conf.vm \
-	${sysconfdir}/d15xx_dev0.conf \
-	${sysconfdir}/c4xxxvf_dev0.conf.vm \
-	${sysconfdir}/c4xxx_dev0.conf \
-	${sysconfdir}/dh895xcc_dev0.conf \
-	${sysconfdir}/c4xxxpf_dev0.conf \
-	${sysconfdir}/c6xxvf_dev0.conf.vm \
-	${sysconfdir}/c4xxxvf_dev0.conf.vm.haps70 \
-	${sysconfdir}/d15xxvf_dev0.conf.vm \
-	${sysconfdir}/dh895xccpf_dev0.conf \
 	${libdir}/libies_sdk.so \
 	${libdir}/libies_sdk.la "
 
