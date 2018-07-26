@@ -18,7 +18,7 @@ Meta Intel Axxia Layer (and its dependencies)
 ---------------------------------------------
 URI: https://github.com/axxia/meta-intel-axxia.git
 branch: rocko
-revision: snr_delivery14
+revision: snr_delivery14.1
 
 If the patched version of DPDK is included, the following is required.
 
