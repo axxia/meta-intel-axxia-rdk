@@ -23,11 +23,8 @@ do_patch_rdk_modules () {
         git add -A
 
         if [ "qat" = "${KLMC}" ]; then
-            # Fix a few things the QAT patch script doesn't handle...
-            # 1> Remove the extraneous '$' directory it creates.
-            rm -rf \$
-            # 2> Add the -asn1 files to the commit.
-            git add -f drivers/crypto/qat/qat_common/*-asn1.[ch]
+            # Add the -asn1 files to the commit.
+            git add -f drivers/net/ethernet/intel/qat/qat_common/*-asn1.[ch]
         fi
 
         RDK_KLM_VERSION=$(readlink ${RDK_ARCHIVE_PATH}/${RDK_KLM_ARCHIVE} \
