@@ -27,7 +27,7 @@ export IES_API_OUTPUT_DIR = "${IES_API_DIR}"
 export IES_API_CORE_DIR = "user_modules/ies-api/core"
 
 export KSRC = "${STAGING_KERNEL_DIR}"
-export QAT_DRV_SRC = "${KSRC}"
+export QAT_DRV_SRC = "${KSRC}/drivers/net/ethernet/intel/qat"
 export HQM_DRIVER = "${KSRC}/drivers/misc/hqm"
 export ICE_SW_DIR = "${KSRC}/drivers/net/ethernet/intel/ice_sw"
 export ICE_SW_AE_SRC_DIR = "${KSRC}/drivers/net/ethernet/intel/ice_sw_ae"
