@@ -1,14 +1,10 @@
 SUMMARY = "Intel RDK user-space modules"
 DESCRIPTION = "Intel RDK is a set of user-space modules on top of the base DPDK package"
 LICENSE = "GPLv2"
-LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.GPLv2;md5=751419260aa954499f7abaabaa882bbe"
 
 SRC_URI = "file://${RDK_USER_ARCHIVE}"
 
 FILESEXTRAPATHS_prepend := "${RDK_ARCHIVE_PATH}:"
-
-RDK_USER_VERSION ?= "unknown_release_info"
-PR = "${RDK_USER_VERSION}"
 
 DEPENDS = "libnl libpcap openssl rsync-native"
 
