@@ -149,4 +149,8 @@ Note: meta-dpdk layer is only required if dpdk support is included in
 
 5.4: If user space is included, set the release info as follows.
 
-    RDK_USER_VERSION = "<releaseinfo>"
+    PREFERRED_VERSION_rdk-user = "<version>"
+
+Note: For development purpose, 'dev' version should build each source archive.
+
+    PREFERRED_VERSION_rdk-user = "dev"
