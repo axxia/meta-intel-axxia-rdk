@@ -1,5 +1,5 @@
 SUMMARY = "Intel RDK user-space modules"
-DESCRIPTION = "Intel RDK is a set of user-space modules on top of the base DPDK package"
+DESCRIPTION = "Intel RDK is a set of user-space modules"
 LICENSE = "GPLv2"
 
 SRC_URI = "file://${RDK_USER_ARCHIVE}"
