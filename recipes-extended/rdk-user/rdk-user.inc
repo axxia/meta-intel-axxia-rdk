@@ -43,6 +43,7 @@ do_compile () {
 	oe_runmake cpk-ae-lib
 	oe_runmake ${QAT_PARALLEL_MAKE} qat_lib
 	oe_runmake ${IES_EXTRA_FLAGS} ies_api_install
+	oe_runmake cli
 }
 
 do_install () {
