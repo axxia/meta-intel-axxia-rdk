@@ -1,5 +1,5 @@
 SUMMARY = "Intel RDK user-space modules"
-DESCRIPTION = "Intel RDK is a set of user-space modules on top of the base DPDK package"
+DESCRIPTION = "Intel RDK is a set of user-space modules"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.GPLv2;md5=751419260aa954499f7abaabaa882bbe"
 

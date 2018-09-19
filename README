@@ -5,7 +5,6 @@ This layer adds the following components to the meta-intel-axxia layer.
 
   - RDK kernel modules.
   - [optional] RDK user space components.
-  - [optional] A patched version of DPDK.
 
 Use of this layer assumes that the RDK relase is available locally.
 
@@ -19,14 +18,6 @@ Meta Intel Axxia Layer (and its dependencies)
 URI: https://github.com/axxia/meta-intel-axxia.git
 branch: rocko
 revision: snr_delivery14.3
-
-If the patched version of DPDK is included, the following is required.
-
-Meta DPDK Layer (Yocto)
------------------------
-URI: https://git.yoctoproject.org/cgit/cgit.cgi/meta-dpdk
-branch: master
-revision: 9d2d7a606278131479cc5b6c8cad65ddea3ff9f6
 
 Updates to meta-intel-axxia README
 ==================================
@@ -83,30 +74,14 @@ release notes.
    $ ln -s rdk_user_src_<releaseinfo>.txz rdk_user_src.tar.xz
 ```
 
-   If DPDK is included, then add the following.
-
-```
-   $ cp /your/path/to/dpdk_diff_<releaseinfo>.patch .
-   $ ln -s dpdk_diff_<releaseinfo>.patch dpdk_diff.patch
-```
-
-2: If DPDK is included, clone the DPDK meta layer. It provides dpdk
-   recipes from upstream. It has only master branch so no checkout
-   required.
-
-```
-   $ cd $YOCTO
-   $ git clone https://git.yoctoproject.org/cgit/cgit.cgi/meta-dpdk
-```
-
-3: Edit the conf/bblayers.conf file
+2: Edit the conf/bblayers.conf file
 
 ```
    $ pwd (you should be at $YOCTO/axxia)
    $ vi conf/bblayers.conf
 ```
 
-4: Edit BBLAYERS variable as follows. Replace references to $YOCTO
+3: Edit BBLAYERS variable as follows. Replace references to $YOCTO
    below with the actual value you provided in step 1.
 
 ```
@@ -121,32 +96,24 @@ release notes.
             $YOCTO/meta-intel \
             $YOCTO/meta-intel-axxia \
             $YOCTO/meta-intel-axxia/meta-intel-snr \
-            $YOCTO/meta-dpdk \
             $YOCTO/meta-intel-axxia-rdk \
             "
 ```
 
-Note: meta-dpdk layer is only required if dpdk support is included in
-      local.conf (see 5.3).
-
-5: Edit the conf/local.conf file:
+4: Edit the conf/local.conf file:
 
 ```
    $ vi conf/local.conf
 ```
 
-5.1: Set distribution configuration to have all Axxia specific features.
+4.1: Set distribution configuration to have all Axxia specific features.
 
     DISTRO = "intel-axxia-indist"
 
-5.2: Enable RDK-userspace support (optional)
+4.2: Enable RDK-userspace support (optional)
 
     DISTRO_FEATURES_append = " userspace"
 
-5.3: Enable DPDK support (optional, userspace support is required for dpdk)
-
-    DISTRO_FEATURES_append = " dpdk"
-
-5.4: If user space is included, set the release info as follows.
+4.3: If user space is included, set the release info as follows.
 
     RDK_USER_VERSION = "<releaseinfo>"
