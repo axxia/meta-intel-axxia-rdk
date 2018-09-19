@@ -17,7 +17,7 @@ Meta Intel Axxia Layer (and its dependencies)
 ---------------------------------------------
 URI: https://github.com/axxia/meta-intel-axxia.git
 branch: rocko
-revision: snr_delivery14.3
+revision: snr_delivery15.1
 
 Updates to meta-intel-axxia README
 ==================================
