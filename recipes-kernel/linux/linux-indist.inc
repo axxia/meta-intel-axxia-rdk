@@ -15,7 +15,7 @@ do_patch_rdk_modules () {
 
     if [ -d ${WORKDIR}/scripts -a -f ${WORKDIR}/scripts/patch_kernel_tree.sh ]
     then
-       ${WORKDIR}/scripts/patch_kernel_tree.sh $STAGING_KERNEL_DIR
+       ${WORKDIR}/scripts/patch_kernel_tree.sh ${STAGING_KERNEL_DIR}
     fi
 
     for KLMC in cpk cpk-ae adk_netd hqm ies qat
