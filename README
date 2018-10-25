@@ -16,8 +16,8 @@ This layer depends on:
 Meta Intel Axxia Layer (and its dependencies)
 ---------------------------------------------
 URI: https://github.com/axxia/meta-intel-axxia.git
-branch: rocko
-revision: snr_delivery15.1
+branch: snr_po
+revision: snr_po_rdk0
 
 Updates to meta-intel-axxia README
 ==================================
@@ -92,7 +92,9 @@ release notes.
             $YOCTO/meta-openembedded/meta-networking \
             $YOCTO/meta-openembedded/meta-filesystems \
             $YOCTO/meta-openembedded/meta-python \
+            $YOCTO/meta-openembedded/meta-perl \
             $YOCTO/meta-virtualization \
+            $YOCTO/meta-security \
             $YOCTO/meta-intel \
             $YOCTO/meta-intel-axxia \
             $YOCTO/meta-intel-axxia/meta-intel-snr \
