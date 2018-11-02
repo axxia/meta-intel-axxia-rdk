@@ -52,3 +52,23 @@ do_patch_rdk_modules () {
 
 addtask do_patch_rdk_modules after do_patch before do_kernel_configme
 do_kernel_configme[depends] += "${PN}:do_patch_rdk_modules"
+
+do_install_append() {
+     install -d ${D}/usr/kernel-headers
+     make headers_install INSTALL_HDR_PATH="${D}/usr/kernel-headers"
+}
+
+sysroot_stage_all_append() {
+    KERNEL_HEADERS="${SYSROOT_DESTDIR}/usr/kernel-headers"
+    KLM_HEADERS="${KERNEL_HEADERS}/include/klm"
+
+    sysroot_stage_dir "${D}/usr/kernel-headers" "${KERNEL_HEADERS}"
+
+    install -d ${KLM_HEADERS}
+    mv ${KERNEL_HEADERS}/include/linux/adf_cfg*.h ${KLM_HEADERS}
+    mv ${KERNEL_HEADERS}/include/linux/hqm_user.h ${KLM_HEADERS}
+    mv ${KERNEL_HEADERS}/include/linux/ice_sw_ae*.h ${KLM_HEADERS}
+}
+
+PACKAGES += "kernel-headers"
+FILES_kernel-headers = "/usr/kernel-headers"
