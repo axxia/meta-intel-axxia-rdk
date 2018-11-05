@@ -10,9 +10,9 @@ FILESEXTRAPATHS_prepend := "${RDK_ARCHIVE_PATH}:"
 RDK_USER_VERSION ?= "unknown_release_info"
 PR = "${RDK_USER_VERSION}"
 
-DEPENDS = "libnl libpcap openssl rsync-native"
+DEPENDS = "virtual/kernel libnl libpcap openssl rsync-native"
 
-inherit module
+inherit autotools
 
 export SYSROOT="${STAGING_DIR_HOST}"
 
@@ -26,12 +26,6 @@ export IES_API_BUILD_DIR = "${IES_API_DIR}"
 export IES_API_OUTPUT_DIR = "${IES_API_DIR}"
 export IES_API_CORE_DIR = "user_modules/ies-api/core"
 
-export KSRC = "${STAGING_KERNEL_DIR}"
-export QAT_DRV_SRC = "${KSRC}/drivers/staging/intel/qat"
-export HQM_DRIVER = "${KSRC}/drivers/staging/intel/hqm"
-export ICE_SW_DIR = "${KSRC}/drivers/staging/intel/ice_sw"
-export ICE_SW_AE_SRC_DIR = "${KSRC}/drivers/staging/intel/ice_sw_ae"
-
 # Extra flags required by ies_api_install target from rdk_user
 IES_EXTRA_FLAGS = "host_alias=x86_64-intelaxxia-linux"
 
@@ -41,6 +35,9 @@ QAT_PARALLEL_MAKE = "-j1"
 
 # Don't remove libtool *.la files
 REMOVE_LIBTOOL_LA = "0"
+
+# Add new include path for KLM headers exported for userspace
+CXXFLAGS += " -I${SYSROOT}/usr/kernel-headers/include/klm "
 
 do_compile () {
 	cd ${WORKDIR}
