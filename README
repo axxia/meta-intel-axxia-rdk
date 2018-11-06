@@ -4,7 +4,7 @@ meta-intel-axxia-rdk
 This layer adds the following components to the meta-intel-axxia layer.
 
   - RDK kernel modules.
-  - [optional] RDK user space components.
+  - [optional] RDK userspace tools.
 
 Use of this layer assumes that the RDK relase is available locally.
 
@@ -67,7 +67,7 @@ release notes.
    $ ln -s rdk_klm_src_<releaseinfo>.txz rdk_klm_src.tar.xz
 ```
 
-   If user space is included, then add the following.
+   If RDK userspace feature is included, then add the following.
 
 ```
    $ cp /your/path/to/rdk_user_src_<releaseinfo>.txz .
@@ -112,10 +112,11 @@ release notes.
 
     DISTRO = "intel-axxia-indist"
 
-4.2: Enable RDK-userspace support (optional)
+4.2: Enable RDK userspace support (optional)
 
-    DISTRO_FEATURES_append = " userspace"
+    DISTRO_FEATURES_append = " rdk-userspace"
 
-4.3: If user space is included, set the release info as follows.
+4.3: If RDK userspace feature is included, set the release info for rdk-tools
+     package as follows.
 
-    RDK_USER_VERSION = "<releaseinfo>"
+    RDK_TOOLS_VERSION = "<releaseinfo>"

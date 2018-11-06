@@ -1,14 +1,14 @@
-SUMMARY = "Intel RDK user-space modules"
-DESCRIPTION = "Intel RDK is a set of user-space modules"
+SUMMARY = "Intel RDK userspace tools"
+DESCRIPTION = "Intel RDK package containing all userspace (API and CLI) sources."
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.GPLv2;md5=751419260aa954499f7abaabaa882bbe"
 
-SRC_URI = "file://${RDK_USER_ARCHIVE}"
+SRC_URI = "file://${RDK_TOOLS_ARCHIVE}"
 
 FILESEXTRAPATHS_prepend := "${RDK_ARCHIVE_PATH}:"
 
-RDK_USER_VERSION ?= "unknown_release_info"
-PR = "${RDK_USER_VERSION}"
+RDK_TOOLS_VERSION ?= "unknown_release_info"
+PR = "${RDK_TOOLS_VERSION}"
 
 DEPENDS = "virtual/kernel libnl libpcap openssl rsync-native"
 
@@ -26,10 +26,10 @@ export IES_API_BUILD_DIR = "${IES_API_DIR}"
 export IES_API_OUTPUT_DIR = "${IES_API_DIR}"
 export IES_API_CORE_DIR = "user_modules/ies-api/core"
 
-# Extra flags required by ies_api_install target from rdk_user
+# Extra flags required by ies_api_install target from the main Makefile
 IES_EXTRA_FLAGS = "host_alias=x86_64-intelaxxia-linux"
 
-# qat_lib target from rdk_user don't support random ordering 
+# qat_lib target from the main Makefile don't support random ordering
 # of some operations, thus force it make to run single-threaded
 QAT_PARALLEL_MAKE = "-j1"
 
