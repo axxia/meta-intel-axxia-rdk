@@ -17,7 +17,7 @@ Meta Intel Axxia Layer (and its dependencies)
 ---------------------------------------------
 URI: https://github.com/axxia/meta-intel-axxia.git
 branch: snr_po
-revision: snr_po_rdk0
+tag: (tag specified in the release notes)
 
 Updates to meta-intel-axxia README
 ==================================
