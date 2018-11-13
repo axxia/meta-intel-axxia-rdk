@@ -110,13 +110,24 @@ release notes.
 
 4.1: Set distribution configuration to have all Axxia specific features.
 
-    DISTRO = "intel-axxia-indist"
+     DISTRO = "intel-axxia-indist"
 
 4.2: Enable RDK userspace support (optional)
 
-    DISTRO_FEATURES_append = " rdk-userspace"
+     DISTRO_FEATURES_append = " rdk-userspace"
 
 4.3: If RDK userspace feature is included, set the release info for rdk-tools
      package as follows.
 
-    RDK_TOOLS_VERSION = "<releaseinfo>"
+     RDK_TOOLS_VERSION = "<releaseinfo>"
+
+4.4: Header files exported by KLM to user space can be accessed as
+     follows.  When cross-compiling, add the following to the compile
+     flags.
+
+     -I$(SDKTARGETSYSROOT)/usr/kernel-headers/include
+
+     When using the axxia-image-large or axxia-image-large-sdk root
+     file system on SNR add the following.
+
+     -I/usr/kernel-headers/include
