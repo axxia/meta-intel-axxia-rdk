@@ -127,7 +127,7 @@ release notes.
 
      -I$(SDKTARGETSYSROOT)/usr/kernel-headers/include
 
-     When using the axxia-image-large or axxia-image-large-sdk root
-     file system on SNR add the following.
+     When using the axxia-image-vcn root file system on SNR add the
+     following.
 
      -I/usr/kernel-headers/include
