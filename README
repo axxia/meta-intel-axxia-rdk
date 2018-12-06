@@ -81,25 +81,11 @@ release notes.
    $ vi conf/bblayers.conf
 ```
 
-3: Edit BBLAYERS variable as follows. Replace references to $YOCTO
-   below with the actual value you provided in step 1.
+3: Append the following line to your conf/bblayers.conf file.
+   Replace $YOCTO below with the actual value you provided in step 1.
 
 ```
-   BBLAYERS ?= " \
-            $YOCTO/poky/meta \
-            $YOCTO/poky/meta-poky \
-            $YOCTO/meta-openembedded/meta-oe \
-            $YOCTO/meta-openembedded/meta-networking \
-            $YOCTO/meta-openembedded/meta-filesystems \
-            $YOCTO/meta-openembedded/meta-python \
-            $YOCTO/meta-openembedded/meta-perl \
-            $YOCTO/meta-virtualization \
-            $YOCTO/meta-security \
-            $YOCTO/meta-intel \
-            $YOCTO/meta-intel-axxia \
-            $YOCTO/meta-intel-axxia/meta-intel-snr \
-            $YOCTO/meta-intel-axxia-rdk \
-            "
+   $YOCTO/meta-intel-axxia-rdk \
 ```
 
 4: Edit the conf/local.conf file:
