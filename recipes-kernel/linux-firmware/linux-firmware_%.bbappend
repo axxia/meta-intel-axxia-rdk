@@ -1,6 +1,8 @@
 FILESEXTRAPATHS_prepend := "${RDK_ARCHIVE_PATH}:"
 
-SRC_URI_append_axxiax86-64 = " file://${RDK_KLM_ARCHIVE}"
+SRC_URI_append_axxiax86-64 = " ${RDK_KLM_ARCHIVE}"
+
+BB_STRICT_CHECKSUM_axxiax86-64 = "0"
 
 do_install_append () {
     # Remove upstream QAT firmware files and install the specific Axxia KLM ones

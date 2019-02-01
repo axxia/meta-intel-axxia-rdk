@@ -1,8 +1,9 @@
 FILESEXTRAPATHS_prepend := "${RDK_ARCHIVE_PATH}:${THISDIR}/frags:"
 
-SRC_URI_append_axxiax86-64 = " \
-    file://${RDK_KLM_ARCHIVE} \
-    file://rdk-modules.scc "
+SRC_URI_append_axxiax86-64 = " ${RDK_KLM_ARCHIVE} \
+			       file://rdk-modules.scc "
+
+BB_STRICT_CHECKSUM_axxiax86-64 = "0"
 
 do_patch_rdk_modules () {
     cd ${STAGING_KERNEL_DIR}
@@ -36,9 +37,18 @@ do_patch_rdk_modules () {
 	    fi
 	fi
 
-	RDK_KLM_VERSION=$(readlink ${RDK_ARCHIVE_PATH}/${RDK_KLM_ARCHIVE} \
-			| cut -d'.' -f1 | sed 's/rdk_klm_src_//g')
-	TIPC="$(echo ${KLMC} | tr '[:lower:]' '[:upper:]') ${RDK_KLM_VERSION}"
+	case "$(echo ${RDK_KLM_ARCHIVE} | cut -d'/' -f1)" in
+	file*)
+		RDK_KLM_RELEASE="$(readlink $(echo ${RDK_ARCHIVE_PATH}/${RDK_KLM_ARCHIVE} \
+		| sed 's/file:\/\///g'))";;
+	http*)
+		RDK_KLM_RELEASE="$(echo ${RDK_KLM_ARCHIVE} | rev | cut -d'/' -f1 | rev)";;
+	*)
+		RDK_KLM_RELEASE="unknown_release_info";;
+	esac
+
+	TIPC="$(echo ${KLMC} | tr '[:lower:]' '[:upper:]') $(echo ${RDK_KLM_RELEASE} \
+	      | cut -d'.' -f1 | sed 's/rdk_klm_src_//g')"
 	git commit --no-gpg-sign --author="Intel <axxia@intel.com>" \
 		   --message "${TIPC}" --message "NOT FOR UPSTREAMING"
     done
