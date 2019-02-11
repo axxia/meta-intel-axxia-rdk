@@ -32,7 +32,8 @@ export IES_API_CORE_DIR = "user_modules/ies-api/core"
 IES_EXTRA_FLAGS = "host_alias=x86_64-intelaxxia-linux"
 
 # Overwrite IES_API_CFLAGS to unset global FORTIFY_SOURCE flag
-export IES_API_CFLAGS = "-g -Wno-unused-result -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=0"
+export IES_API_CFLAGS = "-g -Wno-unused-result -U_FORTIFY_SOURCE \
+			 -D_FORTIFY_SOURCE=0 -Wno-address-of-packed-member"
 
 # qat_lib target from the main Makefile don't support random ordering
 # of some operations, thus force it make to run single-threaded
