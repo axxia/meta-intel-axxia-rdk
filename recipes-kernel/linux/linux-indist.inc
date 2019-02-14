@@ -39,8 +39,14 @@ do_patch_rdk_modules () {
 
 	case "$(echo ${RDK_KLM_ARCHIVE} | cut -d'/' -f1)" in
 	file*)
-		RDK_KLM_RELEASE="$(readlink $(echo ${RDK_ARCHIVE_PATH}/${RDK_KLM_ARCHIVE} \
-		| sed 's/file:\/\///g'))";;
+		RDK_KLM_RELEASE="$(echo ${RDK_ARCHIVE_PATH}/${RDK_KLM_ARCHIVE} | sed 's/file:\/\///g')"
+
+		if [ -L "${RDK_KLM_RELEASE}" ]; then
+		    RDK_KLM_RELEASE="$(readlink ${RDK_KLM_RELEASE})"
+		fi
+
+		RDK_KLM_RELEASE="$(basename ${RDK_KLM_RELEASE})"
+		;;
 	http*)
 		RDK_KLM_RELEASE="$(echo ${RDK_KLM_ARCHIVE} | rev | cut -d'/' -f1 | rev)";;
 	*)
@@ -49,6 +55,7 @@ do_patch_rdk_modules () {
 
 	TIPC="$(echo ${KLMC} | tr '[:lower:]' '[:upper:]') $(echo ${RDK_KLM_RELEASE} \
 	      | cut -d'.' -f1 | sed 's/rdk_klm_src_//g')"
+
 	git commit --no-gpg-sign --author="Intel <axxia@intel.com>" \
 		   --message "${TIPC}" --message "NOT FOR UPSTREAMING"
     done
