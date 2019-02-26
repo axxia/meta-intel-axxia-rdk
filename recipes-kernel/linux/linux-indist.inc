@@ -14,25 +14,23 @@ do_patch_rdk_modules () {
 
     git tag before_rdk_commits
 
-    if [ -d ${WORKDIR}/scripts -a -f ${WORKDIR}/scripts/patch_kernel_tree.sh ]
+    if [ -d ${WORKDIR}/rdk/klm/scripts -a -f ${WORKDIR}/rdk/klm/scripts/patch_kernel_tree.sh ]
     then
-       ${WORKDIR}/scripts/patch_kernel_tree.sh ${STAGING_KERNEL_DIR}
+       ${WORKDIR}/rdk/klm/scripts/patch_kernel_tree.sh ${STAGING_KERNEL_DIR}
     fi
 
     for KLMC in cpk cpk-ae adk_netd hqm ies qat
     do
-	if [ ! -d ${WORKDIR}/${KLMC} ]; then
+	if [ ! -d ${WORKDIR}/rdk/klm/${KLMC} ]; then
 	   continue
 	fi
 
-	${WORKDIR}/${KLMC}/scripts/patch_kernel_tree.sh ${STAGING_KERNEL_DIR}
+	${WORKDIR}/rdk/klm/${KLMC}/scripts/patch_kernel_tree.sh ${STAGING_KERNEL_DIR}
 	git add -A
 
 	if [ "qat" = "${KLMC}" ]; then
 	    # Add the -asn1 files to the commit.
-	    if [ -d drivers/net/ethernet/intel/qat/qat_common ]; then
-	       git add -f drivers/net/ethernet/intel/qat/qat_common/*-asn1.[ch]
-	    elif [ -d drivers/staging/intel/qat/qat_common ]; then
+	    if [ -d drivers/staging/intel/qat/qat_common ]; then
 	       git add -f drivers/staging/intel/qat/qat_common/*-asn1.[ch]
 	    fi
 	fi

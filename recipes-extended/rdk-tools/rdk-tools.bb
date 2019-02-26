@@ -18,12 +18,12 @@ inherit autotools
 
 export SYSROOT="${STAGING_DIR_HOST}"
 
-export LIB_CPKAE_DIR = "${WORKDIR}/user_modules/cpk-ae-lib"
+export LIB_CPKAE_DIR = "${WORKDIR}/rdk/user_modules/cpk-ae-lib"
 
-export QAT_DIR = "${WORKDIR}/user_modules/qat"
+export QAT_DIR = "${WORKDIR}/rdk/user_modules/qat"
 export LIB_QAT18_DIR = "${QAT_DIR}"
 
-export IES_API_DIR = "${WORKDIR}/user_modules/ies-api"
+export IES_API_DIR = "${WORKDIR}/rdk/user_modules/ies-api"
 export IES_API_BUILD_DIR = "${IES_API_DIR}"
 export IES_API_OUTPUT_DIR = "${IES_API_DIR}"
 export IES_API_CORE_DIR = "user_modules/ies-api/core"
@@ -46,7 +46,7 @@ REMOVE_LIBTOOL_LA = "0"
 CXXFLAGS += " -I${SYSROOT}/usr/kernel-headers/include/klm "
 
 do_compile () {
-	cd ${WORKDIR}
+	cd ${WORKDIR}/rdk
 	oe_runmake cpk-ae-lib
 	oe_runmake ${QAT_PARALLEL_MAKE} qat_lib
 	oe_runmake ${IES_EXTRA_FLAGS} ies_api_install
@@ -54,21 +54,21 @@ do_compile () {
 }
 
 do_install () {
-	oe_runmake -C ${WORKDIR} install
+	oe_runmake -C ${WORKDIR}/rdk install
 
 	install -d ${D}${bindir} ${D}${libdir}
-	install -m 0755 ${WORKDIR}/bin/* ${D}${bindir}
-	install -m 0755 ${WORKDIR}/lib/* ${D}${libdir}
+	install -m 0755 ${WORKDIR}/rdk/install/bin/* ${D}${bindir}
+	install -m 0755 ${WORKDIR}/rdk/install/lib/* ${D}${libdir}
 
 	install -d ${D}${includedir} ${D}${includedir}/linux ${D}${includedir}/pub
-	install -m 0644 ${WORKDIR}/include/*.h ${D}${includedir}
-	install -m 0644 ${WORKDIR}/include/Makefile ${D}${includedir}
-	install -m 0644 ${WORKDIR}/include/linux/* ${D}${includedir}/linux
-	install -m 0644 ${WORKDIR}/include/pub/* ${D}${includedir}/pub
+	install -m 0644 ${WORKDIR}/rdk/install/include/*.h ${D}${includedir}
+	install -m 0644 ${WORKDIR}/rdk/install/include/Makefile ${D}${includedir}
+	install -m 0644 ${WORKDIR}/rdk/install/include/linux/* ${D}${includedir}/linux
+	install -m 0644 ${WORKDIR}/rdk/install/include/pub/* ${D}${includedir}/pub
 
-	if [ -d ${WORKDIR}/etc ]; then
+	if [ -d ${WORKDIR}/rdk/install/etc ]; then
 	   install -d ${D}${sysconfdir}
-	   install -m 0644 ${WORKDIR}/etc/* ${D}${sysconfdir}
+	   install -m 0644 ${WORKDIR}/rdk/install/etc/* ${D}${sysconfdir}
 	fi
 
 	# libies_sdk.so shoud be a symlink to the versioned lib

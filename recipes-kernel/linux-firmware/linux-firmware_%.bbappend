@@ -7,7 +7,7 @@ BB_STRICT_CHECKSUM_axxiax86-64 = "0"
 do_install_append () {
     # Remove upstream QAT firmware files and install the specific Axxia KLM ones
     rm -f ${D}${nonarch_base_libdir}/firmware/qat*.bin
-    install -m 0644 ${WORKDIR}/qat/qat/fw/*.bin ${D}${nonarch_base_libdir}/firmware/
+    install -m 0644 ${WORKDIR}/rdk/klm/qat/qat/fw/*.bin ${D}${nonarch_base_libdir}/firmware/
 }
 
 PACKAGES =+ "${PN}-klm-qat-license ${PN}-klm-qat"
