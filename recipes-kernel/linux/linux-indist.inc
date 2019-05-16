@@ -6,63 +6,95 @@ SRC_URI_append_axxiax86-64 = " ${RDK_KLM_ARCHIVE} \
 BB_STRICT_CHECKSUM_axxiax86-64 = "0"
 
 do_patch_rdk_modules () {
-    cd ${STAGING_KERNEL_DIR}
-    if [ ! -z "$(git status --porcelain)" ]; then
-	git stash
-	CHANGES=yes
-    fi
+    DEFAULT_PATH="drivers/staging/intel"
 
+    # If not set in local.conf
+    RDK_KLM_VERSION="default"
+
+    cd ${STAGING_KERNEL_DIR}
+
+    # Stash unstaged changes and apply them after
+    [ ! -z "$(git status --porcelain)" ] && { git stash; CHANGES=yes; }
+
+    # Create tag before patching the kernel with RDK KLM modules
     git tag before_rdk_commits
 
-    if [ -d ${WORKDIR}/rdk/klm/scripts -a -f ${WORKDIR}/rdk/klm/scripts/patch_kernel_tree.sh ]
-    then
-       ${WORKDIR}/rdk/klm/scripts/patch_kernel_tree.sh ${STAGING_KERNEL_DIR}
+    # Get release tag from the archive name
+    case ${RDK_KLM_ARCHIVE} in
+        file*)
+            RELEASE_TAG="$(echo ${RDK_ARCHIVE_PATH}/${RDK_KLM_ARCHIVE} | sed 's/file:\/\///g')"
+            [ -L "${RELEASE_TAG}" ] && RELEASE_TAG="$(readlink ${RELEASE_TAG})"
+            RELEASE_TAG="$(basename ${RELEASE_TAG})";;
+	http*)
+            RELEASE_TAG="$(echo ${RDK_KLM_ARCHIVE} | rev | cut -d'/' -f1 | rev)";;
+        *)
+            RELEASE_TAG="unknown_release_info";;
+    esac
+    RELEASE_TAG="$(echo ${RELEASE_TAG} | cut -d'.' -f1 | sed 's/rdk_klm_src_//g')"
+
+    # If no version for KLM modules is set in local.conf, use the tag from archive name
+    if [ "${RDK_KLM_VERSION}" = "default" -a -n "${RELEASE_TAG}" ]; then
+       RDK_KLM_VERSION="${RELEASE_TAG}"
     fi
 
-    for KLMC in cpk cpk-ae adk_netd hqm ies qat
+    # Create KLM drivers path and add entry to the parent directory Makefile and Kconfig
+    if [ -f ${WORKDIR}/rdk/klm/scripts/patch_kernel_tree.sh ]; then
+       # Create default path (drivers/staging/intel)
+       ${WORKDIR}/rdk/klm/scripts/patch_kernel_tree.sh ${STAGING_KERNEL_DIR}
+       > ${STAGING_KERNEL_DIR}/${DEFAULT_PATH}/Kconfig
+       > ${STAGING_KERNEL_DIR}/${DEFAULT_PATH}/Makefile
+
+       # Create specific path (drivers/staging/intel/$RDK_KLM_VERSION)
+       ${WORKDIR}/rdk/klm/scripts/patch_kernel_tree.sh \
+          ${STAGING_KERNEL_DIR} ${DEFAULT_PATH}/${RDK_KLM_VERSION}
+       # Add entry to the parent directory Kconfig (patch_kernel_tree.sh doesn't do this)
+       echo "source \"${DEFAULT_PATH}/${RDK_KLM_VERSION}/Kconfig\"" >> \
+          ${STAGING_KERNEL_DIR}/${DEFAULT_PATH}/Kconfig
+    fi
+
+    # Install each driver in the specific path and create commits
+    for KLMC in cpk cpk-ae hqm ies qat
     do
-	if [ ! -d ${WORKDIR}/rdk/klm/${KLMC} ]; then
-	   continue
-	fi
+	[ ! -d ${WORKDIR}/rdk/klm/${KLMC} ] && continue
 
-	${WORKDIR}/rdk/klm/${KLMC}/scripts/patch_kernel_tree.sh ${STAGING_KERNEL_DIR}
+        if [ "hqm" = "${KLMC}" ]; then
+	   ${WORKDIR}/rdk/klm/${KLMC}/${KLMC}/scripts/patch_kernel_tree.sh \
+              ${STAGING_KERNEL_DIR} ${DEFAULT_PATH}/${RDK_KLM_VERSION}
+        else
+	   ${WORKDIR}/rdk/klm/${KLMC}/scripts/patch_kernel_tree.sh \
+              ${STAGING_KERNEL_DIR} ${DEFAULT_PATH}/${RDK_KLM_VERSION}
+        fi
+
+        # Handle drivers name differences (cpk->ice_sw; cpk-ae->ice_sw_ae)
+        case ${KLMC} in
+           "cpk")    KLM_DRIVER="ice_sw";;
+           "cpk-ae") KLM_DRIVER="ice_sw_ae";;
+           *)        KLM_DRIVER="${KLMC}";;
+        esac
+
+        # Add $RDK_KLM_VERSION value in all paths from $KLMC Makefiles
+        find ${DEFAULT_PATH}/${RDK_KLM_VERSION}/${KLM_DRIVER} -name "Makefile" -exec \
+           sed -i s#${DEFAULT_PATH}#${DEFAULT_PATH}/${RDK_KLM_VERSION}#g {} +
+
+        # Create git commit for ${KLMC} module
 	git add -A
-
 	if [ "qat" = "${KLMC}" ]; then
 	    # Add the -asn1 files to the commit.
-	    if [ -d drivers/staging/intel/qat/qat_common ]; then
-	       git add -f drivers/staging/intel/qat/qat_common/*-asn1.[ch]
+	    if [ -d ${DEFAULT_PATH}/qat/qat_common ]; then
+	       git add -f ${DEFAULT_PATH}/qat/qat_common/*-asn1.[ch]
 	    fi
 	fi
 
-	case "$(echo ${RDK_KLM_ARCHIVE} | cut -d'/' -f1)" in
-	file*)
-		RDK_KLM_RELEASE="$(echo ${RDK_ARCHIVE_PATH}/${RDK_KLM_ARCHIVE} | sed 's/file:\/\///g')"
-
-		if [ -L "${RDK_KLM_RELEASE}" ]; then
-		    RDK_KLM_RELEASE="$(readlink ${RDK_KLM_RELEASE})"
-		fi
-
-		RDK_KLM_RELEASE="$(basename ${RDK_KLM_RELEASE})"
-		;;
-	http*)
-		RDK_KLM_RELEASE="$(echo ${RDK_KLM_ARCHIVE} | rev | cut -d'/' -f1 | rev)";;
-	*)
-		RDK_KLM_RELEASE="unknown_release_info";;
-	esac
-
-	TIPC="$(echo ${KLMC} | tr '[:lower:]' '[:upper:]') $(echo ${RDK_KLM_RELEASE} \
-	      | cut -d'.' -f1 | sed 's/rdk_klm_src_//g')"
-
+        TIPC="$(echo ${KLMC} | tr '[:lower:]' '[:upper:]') ${RDK_KLM_VERSION}"
 	git commit --no-gpg-sign --author="Intel <axxia@intel.com>" \
 		   --message "${TIPC}" --message "NOT FOR UPSTREAMING"
     done
 
+    # Create tag after patches with RDK KLM modules were created
     git tag after_rdk_commits
 
-    if [ "yes" = "${CHANGES}" ]; then
-	git stash apply
-    fi
+    # Apply stashed changes if any
+    [ -n "${CHANGES}" ] && git stash apply || exit 0
 }
 
 addtask do_patch_rdk_modules after do_patch before do_kernel_configme
