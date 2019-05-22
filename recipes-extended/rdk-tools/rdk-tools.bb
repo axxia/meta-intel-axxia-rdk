@@ -72,7 +72,7 @@ do_install () {
 	fi
 
 	# libies_sdk.so shoud be a symlink to the versioned lib
-	ln -sf $(basename ${D}${libdir}/libies_sdk-*.so) ${D}${libdir}/libies_sdk.so
+	ln -sf $(basename ${D}${libdir}/libies_sdk-*.so*) ${D}${libdir}/libies_sdk.so
 
 	# remove local rpath to pass QA testing
 	chrpath -d ${D}/${bindir}/cli
@@ -84,12 +84,14 @@ do_install () {
 FILES_${PN} = " ${bindir} ${sysconfdir} \
 	${libdir}/libae_client.so \
 	${libdir}/libipsec_inline.so \
-	${libdir}/libies_sdk-*.so "
+	${libdir}/libies_sdk-*.so* "
 
 FILES_${PN}-dev = " ${includedir} \
 	${libdir}/libies_sdk.so \
 	${libdir}/libies_sdk.la "
 
 INSANE_SKIP_${PN} = "ldflags"
+
+INSANE_SKIP_${PN}-dev = "ldflags"
 
 BBCLASSEXTEND = "native nativesdk"
