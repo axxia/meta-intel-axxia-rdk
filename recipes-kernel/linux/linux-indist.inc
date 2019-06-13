@@ -6,18 +6,7 @@ SRC_URI_append_axxiax86-64 = " ${RDK_KLM_ARCHIVE} \
 BB_STRICT_CHECKSUM_axxiax86-64 = "0"
 
 do_patch_rdk_modules () {
-    DEFAULT_PATH="drivers/staging/intel"
-
-    # If not set in local.conf
-    RDK_KLM_VERSION="default"
-
-    cd ${STAGING_KERNEL_DIR}
-
-    # Stash unstaged changes and apply them after
-    [ ! -z "$(git status --porcelain)" ] && { git stash; CHANGES=yes; }
-
-    # Create tag before patching the kernel with RDK KLM modules
-    git tag before_rdk_commits
+    STAGING_PATH="drivers/staging/intel"
 
     # Get release tag from the archive name
     case ${RDK_KLM_ARCHIVE} in
@@ -27,29 +16,38 @@ do_patch_rdk_modules () {
             RELEASE_TAG="$(basename ${RELEASE_TAG})";;
 	http*)
             RELEASE_TAG="$(echo ${RDK_KLM_ARCHIVE} | rev | cut -d'/' -f1 | rev)";;
-        *)
-            RELEASE_TAG="unknown_release_info";;
     esac
     RELEASE_TAG="$(echo ${RELEASE_TAG} | cut -d'.' -f1 | sed 's/rdk_klm_src_//g')"
+    [ -z "${RELEASE_TAG}" ] && RELEASE_TAG="unknown_release_info"
 
-    # If no version for KLM modules is set in local.conf, use the tag from archive name
-    if [ "${RDK_KLM_VERSION}" = "default" -a -n "${RELEASE_TAG}" ]; then
-       RDK_KLM_VERSION="${RELEASE_TAG}"
-    fi
+    # If no version for KLM modules is set in local.conf, use RELEASE_TAG
+    [ -z "${RDK_KLM_VERSION}" -a -n "${RELEASE_TAG}" ] && RDK_KLM_VERSION="${RELEASE_TAG}"
+
+    STAGING_PATH="${STAGING_PATH}/${RDK_KLM_VERSION}"
+
+    cd ${STAGING_KERNEL_DIR}
+
+    # Stash unstaged changes and apply them after
+    [ ! -z "$(git status --porcelain)" ] && { git stash; CHANGES=yes; }
+
+    # Create tag before patching the kernel with RDK KLM modules
+    git tag before_rdk_commits
 
     # Create KLM drivers path and add entry to the parent directory Makefile and Kconfig
     if [ -f ${WORKDIR}/rdk/klm/scripts/patch_kernel_tree.sh ]; then
-       # Create default path (drivers/staging/intel)
+       # Create parent staging path (default is drivers/staging/intel)
        ${WORKDIR}/rdk/klm/scripts/patch_kernel_tree.sh ${STAGING_KERNEL_DIR}
-       > ${STAGING_KERNEL_DIR}/${DEFAULT_PATH}/Kconfig
-       > ${STAGING_KERNEL_DIR}/${DEFAULT_PATH}/Makefile
+       > ${STAGING_KERNEL_DIR}/$(dirname ${STAGING_PATH})/Kconfig
+       > ${STAGING_KERNEL_DIR}/$(dirname ${STAGING_PATH})/Makefile
 
-       # Create specific path (drivers/staging/intel/$RDK_KLM_VERSION)
+       # Create version specific path (STAGING_PATH)
        ${WORKDIR}/rdk/klm/scripts/patch_kernel_tree.sh \
-          ${STAGING_KERNEL_DIR} ${DEFAULT_PATH}/${RDK_KLM_VERSION}
+          ${STAGING_KERNEL_DIR} ${STAGING_PATH}
+       rm -f sed.tmp
+
        # Add entry to the parent directory Kconfig (patch_kernel_tree.sh doesn't do this)
-       echo "source \"${DEFAULT_PATH}/${RDK_KLM_VERSION}/Kconfig\"" >> \
-          ${STAGING_KERNEL_DIR}/${DEFAULT_PATH}/Kconfig
+       echo "source \"${STAGING_PATH}/Kconfig\"" >> \
+          ${STAGING_KERNEL_DIR}/$(dirname ${STAGING_PATH})/Kconfig
     fi
 
     # Install each driver in the specific path and create commits
@@ -59,10 +57,10 @@ do_patch_rdk_modules () {
 
         if [ "hqm" = "${KLMC}" ]; then
 	   ${WORKDIR}/rdk/klm/${KLMC}/${KLMC}/scripts/patch_kernel_tree.sh \
-              ${STAGING_KERNEL_DIR} ${DEFAULT_PATH}/${RDK_KLM_VERSION}
+              ${STAGING_KERNEL_DIR} ${STAGING_PATH}
         else
 	   ${WORKDIR}/rdk/klm/${KLMC}/scripts/patch_kernel_tree.sh \
-              ${STAGING_KERNEL_DIR} ${DEFAULT_PATH}/${RDK_KLM_VERSION}
+              ${STAGING_KERNEL_DIR} ${STAGING_PATH}
         fi
 
         # Handle drivers name differences (cpk->ice_sw; cpk-ae->ice_sw_ae)
@@ -73,15 +71,15 @@ do_patch_rdk_modules () {
         esac
 
         # Add $RDK_KLM_VERSION value in all paths from $KLMC Makefiles
-        find ${DEFAULT_PATH}/${RDK_KLM_VERSION}/${KLM_DRIVER} -name "Makefile" -exec \
-           sed -i s#${DEFAULT_PATH}#${DEFAULT_PATH}/${RDK_KLM_VERSION}#g {} +
+        find ${STAGING_PATH}/${KLM_DRIVER} -name "Makefile" -exec \
+           sed -i s#$(dirname ${STAGING_PATH})#${STAGING_PATH}#g {} +
 
         # Create git commit for ${KLMC} module
 	git add -A
 	if [ "qat" = "${KLMC}" ]; then
 	    # Add the -asn1 files to the commit.
-	    if [ -d ${DEFAULT_PATH}/qat/qat_common ]; then
-	       git add -f ${DEFAULT_PATH}/qat/qat_common/*-asn1.[ch]
+	    if [ -d ${STAGING_PATH}/qat/qat_common ]; then
+	       git add -f ${STAGING_PATH}/qat/qat_common/*-asn1.[ch]
 	    fi
 	fi
 
