@@ -17,8 +17,9 @@ do_patch_rdk_modules () {
 	http*)
             RELEASE_TAG="$(echo ${RDK_KLM_ARCHIVE} | rev | cut -d'/' -f1 | rev)";;
     esac
-    RELEASE_TAG="$(echo ${RELEASE_TAG} | cut -d'.' -f1 | sed 's/rdk_klm_src_//g')"
-    [ -z "${RELEASE_TAG}" ] && RELEASE_TAG="unknown_release_info"
+    RELEASE_TAG="$(echo ${RELEASE_TAG} | cut -d'.' -f1 | sed 's/rdk_klm_src//g')"
+    [ -z "${RELEASE_TAG}" ] && RELEASE_TAG="unknown_release_info" \
+                            || RELEASE_TAG="${RELEASE_TAG:1}"
 
     # If no version for KLM modules is set in local.conf, use RELEASE_TAG
     [ -z "${RDK_KLM_VERSION}" -a -n "${RELEASE_TAG}" ] && RDK_KLM_VERSION="${RELEASE_TAG}"
