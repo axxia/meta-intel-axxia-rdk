@@ -85,6 +85,7 @@ do_patch_rdk_modules () {
 	fi
 
         TIPC="$(echo ${KLMC} | tr '[:lower:]' '[:upper:]') ${RDK_KLM_VERSION}"
+        [ "${RDK_KLM_VERSION}" != "${RELEASE_TAG}" ] && TIPC="${TIPC} ${RELEASE_TAG}"
 	git commit --no-gpg-sign --author="Intel <axxia@intel.com>" \
 		   --message "${TIPC}" --message "NOT FOR UPSTREAMING"
     done
