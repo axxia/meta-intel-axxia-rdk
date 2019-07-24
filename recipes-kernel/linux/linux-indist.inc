@@ -52,7 +52,7 @@ do_patch_rdk_modules () {
     fi
 
     # Install each driver in the specific path and create commits
-    for KLMC in cpk cpk-ae hqm ies qat
+    for KLMC in cpk cpk-ae hqm ies qat netd
     do
 	[ ! -d ${WORKDIR}/rdk/klm/${KLMC} ] && continue
 
@@ -64,10 +64,11 @@ do_patch_rdk_modules () {
               ${STAGING_KERNEL_DIR} ${STAGING_PATH}
         fi
 
-        # Handle drivers name differences (cpk->ice_sw; cpk-ae->ice_sw_ae)
+        # Handle drivers name differences (cpk->ice_sw; cpk-ae->ice_sw_ae; netd->adk_netd)
         case ${KLMC} in
            "cpk")    KLM_DRIVER="ice_sw";;
            "cpk-ae") KLM_DRIVER="ice_sw_ae";;
+           "netd")   KLM_DRIVER="adk_netd";;
            *)        KLM_DRIVER="${KLMC}";;
         esac
 
@@ -86,7 +87,7 @@ do_patch_rdk_modules () {
 
         TIPC="$(echo ${KLMC} | tr '[:lower:]' '[:upper:]') ${RDK_KLM_VERSION}"
         [ "${RDK_KLM_VERSION}" != "${RELEASE_TAG}" ] && TIPC="${TIPC} ${RELEASE_TAG}"
-	git commit --no-gpg-sign --author="Intel <axxia@intel.com>" \
+	git commit --no-gpg-sign --author="Intel AXXIA <axxia@intel.com>" \
 		   --message "${TIPC}" --message "NOT FOR UPSTREAMING"
     done
 
@@ -115,6 +116,7 @@ sysroot_stage_all_append() {
     mv ${KERNEL_HEADERS}/include/linux/adf_cfg*.h ${KLM_HEADERS}
     mv ${KERNEL_HEADERS}/include/linux/hqm_user.h ${KLM_HEADERS}
     mv ${KERNEL_HEADERS}/include/linux/ice_sw_ae*.h ${KLM_HEADERS}
+    mv ${KERNEL_HEADERS}/include/linux/adk_netd*.h ${KLM_HEADERS}
 }
 
 PACKAGES += "kernel-headers"

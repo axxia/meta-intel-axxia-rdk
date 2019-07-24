@@ -3,7 +3,7 @@ meta-intel-axxia-rdk
 
 This layer adds the following components to the meta-intel-axxia layer.
 
-  - RDK kernel modules.
+  - RDK kernel modules including ADK NetD (Network Driver).
   - [optional] RDK userspace tools.
 
 Use of this layer assumes that the RDK relase is available locally.
