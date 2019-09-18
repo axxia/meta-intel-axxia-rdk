@@ -75,7 +75,9 @@ do_install () {
 	ln -sf $(basename ${D}${libdir}/libies_sdk-*.so*) ${D}${libdir}/libies_sdk.so
 
 	# remove local rpath to pass QA testing
-	chrpath -d ${D}/${bindir}/cli
+	test -f ${D}/${bindir}/ies_cli && chrpath -d ${D}/${bindir}/ies_cli
+        test -f ${D}/${bindir}/iesserver && chrpath -d ${D}/${bindir}/iesserver
+        test -f ${D}/${bindir}/cli && chrpath -d ${D}/${bindir}/cli
 
 	# Remove path to workdir from libtool file to pass QA testing
 	sed -i '/libdir=/d' ${D}${libdir}/libies_sdk.la
