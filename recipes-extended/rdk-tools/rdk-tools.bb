@@ -71,8 +71,10 @@ do_install () {
 	   install -m 0644 ${WORKDIR}/rdk/install/etc/* ${D}${sysconfdir}
 	fi
 
-	# libies_sdk.so shoud be a symlink to the versioned lib
-	ln -sf $(basename ${D}${libdir}/libies_sdk-*.so*) ${D}${libdir}/libies_sdk.so
+	# recreate symlinks which were removed on install by "rsync -L --no-l"
+	IES_LIB_NAME=$(basename ${D}${libdir}/libies_sdk-*.so\.[0-9]\.[0-9]*\.[0-9]*)
+	ln -sf ${IES_LIB_NAME} ${D}${libdir}/libies_sdk.so
+	ln -sf ${IES_LIB_NAME} ${D}${libdir}/libies_sdk-50sm.so.2
 
 	# remove local rpath to pass QA testing
 	test -f ${D}/${bindir}/ies_cli && chrpath -d ${D}/${bindir}/ies_cli
