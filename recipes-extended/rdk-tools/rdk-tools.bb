@@ -48,6 +48,7 @@ CXXFLAGS += " -I${SYSROOT}/usr/kernel-headers/include/klm "
 do_compile () {
 	cd ${WORKDIR}/rdk
 	oe_runmake cpk-ae-lib
+	oe_runmake netd-lib
 	oe_runmake ${QAT_PARALLEL_MAKE} qat_lib
 	oe_runmake ${IES_EXTRA_FLAGS} ies_api_install
 	oe_runmake cli
@@ -87,6 +88,7 @@ do_install () {
 
 FILES_${PN} = " ${bindir} ${sysconfdir} \
 	${libdir}/libae_client.so \
+	${libdir}/libnetd_client.so \
 	${libdir}/libipsec_inline.so \
 	${libdir}/libies_sdk-*.so* "
 
