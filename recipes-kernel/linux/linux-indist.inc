@@ -107,17 +107,20 @@ do_install_append() {
 }
 
 sysroot_stage_all_append() {
-    KERNEL_HEADERS="${SYSROOT_DESTDIR}/usr/kernel-headers"
-    KLM_HEADERS="${KERNEL_HEADERS}/include/klm"
+    # Install headers only for the virtual/kernel provider
+    if [ "${KERNEL_PACKAGE_NAME}" = "kernel" ]; then
+        KERNEL_HEADERS="${SYSROOT_DESTDIR}/usr/kernel-headers"
+        KLM_HEADERS="${KERNEL_HEADERS}/include/klm"
 
-    sysroot_stage_dir "${D}/usr/kernel-headers" "${KERNEL_HEADERS}"
+        sysroot_stage_dir "${D}/usr/kernel-headers" "${KERNEL_HEADERS}"
 
-    install -d ${KLM_HEADERS}
-    mv ${KERNEL_HEADERS}/include/linux/adf_cfg*.h ${KLM_HEADERS}
-    mv ${KERNEL_HEADERS}/include/linux/hqm_user.h ${KLM_HEADERS}
-    mv ${KERNEL_HEADERS}/include/linux/ice_sw_ae*.h ${KLM_HEADERS}
-    mv ${KERNEL_HEADERS}/include/linux/adk_netd*.h ${KLM_HEADERS}
+        install -d ${KLM_HEADERS}
+        mv ${KERNEL_HEADERS}/include/linux/adf_cfg*.h ${KLM_HEADERS}
+        mv ${KERNEL_HEADERS}/include/linux/hqm_user.h ${KLM_HEADERS}
+        mv ${KERNEL_HEADERS}/include/linux/ice_sw_ae*.h ${KLM_HEADERS}
+        mv ${KERNEL_HEADERS}/include/linux/adk_netd*.h ${KLM_HEADERS}
+    fi
 }
 
-PACKAGES += "kernel-headers"
-FILES_kernel-headers = "/usr/kernel-headers"
+PACKAGES += "${PN}-kernel-headers"
+FILES_${PN}-kernel-headers = "/usr/kernel-headers"
