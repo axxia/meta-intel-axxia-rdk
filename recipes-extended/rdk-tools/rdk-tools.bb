@@ -47,8 +47,7 @@ CXXFLAGS += " -I${SYSROOT}/usr/kernel-headers/include/klm "
 
 do_compile () {
 	cd ${WORKDIR}/rdk
-	oe_runmake cpk-ae-lib
-	oe_runmake netd-lib
+	oe_runmake cpk-ae-lib netd-lib
 	oe_runmake ${QAT_PARALLEL_MAKE} qat_lib
 	oe_runmake ${IES_EXTRA_FLAGS} ies_api_install
 	oe_runmake cli
@@ -58,46 +57,34 @@ do_install () {
 	oe_runmake -C ${WORKDIR}/rdk install
 
 	install -d ${D}${bindir} ${D}${libdir}
-	install -m 0755 ${WORKDIR}/rdk/install/bin/* ${D}${bindir}
-	install -m 0755 ${WORKDIR}/rdk/install/lib/* ${D}${libdir}
-
-	install -d ${D}${includedir} ${D}${includedir}/linux ${D}${includedir}/pub
-	install -m 0644 ${WORKDIR}/rdk/install/include/*.h ${D}${includedir}
-	install -m 0644 ${WORKDIR}/rdk/install/include/Makefile ${D}${includedir}
-	install -m 0644 ${WORKDIR}/rdk/install/include/linux/* ${D}${includedir}/linux
-	install -m 0644 ${WORKDIR}/rdk/install/include/pub/* ${D}${includedir}/pub
-
-	if [ -d ${WORKDIR}/rdk/install/etc ]; then
-	   install -d ${D}${sysconfdir}
-	   install -m 0644 ${WORKDIR}/rdk/install/etc/* ${D}${sysconfdir}
-	fi
+	install -d ${D}${includedir} ${D}${sysconfdir}
+	cp -r ${WORKDIR}/rdk/install/bin/* ${D}${bindir}
+	cp -r ${WORKDIR}/rdk/install/lib/* ${D}${libdir}
+	cp -r ${WORKDIR}/rdk/install/include/* ${D}${includedir}
+	cp -r ${WORKDIR}/rdk/install/etc/* ${D}${sysconfdir}
 
 	# recreate symlinks which were removed on install by "rsync -L --no-l"
 	IES_LIB_NAME=$(basename ${D}${libdir}/libies_sdk-*.so\.[0-9]\.[0-9]*\.[0-9]*)
 	ln -sf ${IES_LIB_NAME} ${D}${libdir}/libies_sdk.so
 	ln -sf ${IES_LIB_NAME} ${D}${libdir}/libies_sdk-50sm.so.2
 
-	# remove local rpath to pass QA testing
+	# remove local rpath from bindir to pass QA testing
 	test -f ${D}/${bindir}/ies_cli && chrpath -d ${D}/${bindir}/ies_cli
-        test -f ${D}/${bindir}/iesserver && chrpath -d ${D}/${bindir}/iesserver
-        test -f ${D}/${bindir}/cli && chrpath -d ${D}/${bindir}/cli
+	test -f ${D}/${bindir}/iesserver && chrpath -d ${D}/${bindir}/iesserver
+	test -f ${D}/${bindir}/cli && chrpath -d ${D}/${bindir}/cli
 
-	# Remove path to workdir from libtool file to pass QA testing
-	sed -i '/libdir=/d' ${D}${libdir}/libies_sdk.la
+	# replace local rpaths to pass QA testing
+	sed -i "s#libdir=.*#libdir=\'${libdir}\'#g" \
+		${D}${libdir}/libies_sdk.la
 }
-
-FILES_${PN} = " ${bindir} ${sysconfdir} \
-	${libdir}/libae_client.so \
-	${libdir}/libnetd_client.so \
-	${libdir}/libipsec_inline.so \
-	${libdir}/libies_sdk-*.so* "
 
 FILES_${PN}-dev = " ${includedir} \
 	${libdir}/libies_sdk.so \
 	${libdir}/libies_sdk.la "
 
-INSANE_SKIP_${PN} = "ldflags"
+FILES_${PN} = " ${bindir} ${sysconfdir} ${libdir}"
 
+INSANE_SKIP_${PN} = "ldflags"
 INSANE_SKIP_${PN}-dev = "ldflags"
 
 BBCLASSEXTEND = "native nativesdk"
