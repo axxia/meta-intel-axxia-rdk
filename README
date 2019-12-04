@@ -108,8 +108,15 @@ release notes.
      package as follows.
 
      RDK_TOOLS_VERSION = "<releaseinfo>"
+     
+4.4: If RDK userspace feature is included, choose the IES API mode of
+     operation through IES_ENABLE_SHM variable: 
+     - "true" value for SHM (shared-memory model) - default 
+     - "false" value for RPC (remote procedure call)
 
-4.4: To get RDK archives from a remote location (http, https server), set
+     IES_ENABLE_SHM = "false"
+
+4.5: To get RDK archives from a remote location (http, https server), set
      the following variables:
 
      RDK_KLM_ARCHIVE = "http[s]://<server_path>/rdk_klm_src_<version>.<extension>"
@@ -123,7 +130,7 @@ release notes.
            and /recipes-kernel/linux-firmware/linux-firmware_%.bbappend
      * for RDK_TOOLS_ARCHIVE in recipes-extended/rdk-tools/rdk-tools.bb
 
-4.5: Set the version of the RDK KLM modules throught RDK_KLM_VERSION variable
+4.6: Set the version of the RDK KLM modules throught RDK_KLM_VERSION variable
      in order to customize the path where the drivers will be installed in
      the kernel tree (drivers/staging/intel/<rdk-klm-version>) and to customize
      the commit message in the kernel git repository from work-shared directory.
@@ -133,7 +140,7 @@ release notes.
      If not set, the value of this variable will be extracted from the RDK KLM
      archive name (rdk_klm_src_<releaseinfo>.txz).
 
-4.6: Header files exported by KLM to user space can be accessed as
+4.7: Header files exported by KLM to user space can be accessed as
      follows.  When cross-compiling, add the following to the compile
      flags.
 

@@ -12,11 +12,11 @@ BB_STRICT_CHECKSUM_axxiax86-64 = "0"
 RDK_TOOLS_VERSION ?= "unknown_release_info"
 PR = "${RDK_TOOLS_VERSION}"
 
-DEPENDS = "virtual/kernel libnl libpcap openssl rsync-native"
+DEPENDS = "virtual/kernel libnl libpcap openssl rsync-native thrift"
 
 inherit autotools
 
-export SYSROOT="${STAGING_DIR_HOST}"
+export SDKTARGETSYSROOT="${STAGING_DIR_HOST}"
 
 export LIB_CPKAE_DIR = "${WORKDIR}/rdk/user_modules/cpk-ae-lib"
 
@@ -27,6 +27,10 @@ export IES_API_DIR = "${WORKDIR}/rdk/user_modules/ies-api"
 export IES_API_BUILD_DIR = "${IES_API_DIR}"
 export IES_API_OUTPUT_DIR = "${IES_API_DIR}"
 export IES_API_CORE_DIR = "user_modules/ies-api/core"
+
+# Choose IES API mode of operation: "true" for SHM (shared-memory model)
+# which is the default or "false" for RPC (remote procedure call)
+export IES_ENABLE_SHM ?= "true"
 
 # Extra flags required by ies_api_install target from the main Makefile
 IES_EXTRA_FLAGS = "host_alias=x86_64-intelaxxia-linux"
@@ -63,24 +67,27 @@ do_install () {
 	cp -r ${WORKDIR}/rdk/install/include/* ${D}${includedir}
 	cp -r ${WORKDIR}/rdk/install/etc/* ${D}${sysconfdir}
 
-	# recreate symlinks which were removed on install by "rsync -L --no-l"
-	IES_LIB_NAME=$(basename ${D}${libdir}/libies_sdk-*.so\.[0-9]\.[0-9]*\.[0-9]*)
-	ln -sf ${IES_LIB_NAME} ${D}${libdir}/libies_sdk.so
-	ln -sf ${IES_LIB_NAME} ${D}${libdir}/libies_sdk-50sm.so.2
+	# fix symlinks removed on install by "rsync -L --no-l"
+	cp -r ${IES_API_DIR}/lib/* ${D}${libdir}
 
-	# remove local rpath from bindir to pass QA testing
-	test -f ${D}/${bindir}/ies_cli && chrpath -d ${D}/${bindir}/ies_cli
-	test -f ${D}/${bindir}/iesserver && chrpath -d ${D}/${bindir}/iesserver
-	test -f ${D}/${bindir}/cli && chrpath -d ${D}/${bindir}/cli
+	# replace local rpaths from libtool files to pass QA testing
+	sed -i "s#${IES_API_DIR}/lib#${libdir}#g" ${D}${libdir}/*.la
 
-	# replace local rpaths to pass QA testing
-	sed -i "s#libdir=.*#libdir=\'${libdir}\'#g" \
-		${D}${libdir}/libies_sdk.la
+	# remove local rpath from binaries to pass QA testing
+	for file in ${D}${libdir}/*.so* ${D}${bindir}/*; do
+		chrpath -d $file 2>/dev/null || :
+	done
+
+	# replace local rpaths from .pc files to pass QA testing
+	if [ -f ${D}${libdir}/pkgconfig/iesclient.pc ]; then
+		sed -i "s#${IES_API_DIR}#${prefix}#g" \
+		${D}${libdir}/pkgconfig/iesclient.pc
+	fi
 }
 
 FILES_${PN}-dev = " ${includedir} \
-	${libdir}/libies_sdk.so \
-	${libdir}/libies_sdk.la "
+	${libdir}/libies*.so \
+	${libdir}/*.la"
 
 FILES_${PN} = " ${bindir} ${sysconfdir} ${libdir}"
 
