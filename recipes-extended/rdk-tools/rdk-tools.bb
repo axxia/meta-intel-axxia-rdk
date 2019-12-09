@@ -16,7 +16,7 @@ DEPENDS = "virtual/kernel libnl libpcap openssl rsync-native thrift"
 
 inherit autotools
 
-export SDKTARGETSYSROOT="${STAGING_DIR_HOST}"
+export SDKTARGETSYSROOT = "${STAGING_DIR_HOST}"
 
 export LIB_CPKAE_DIR = "${WORKDIR}/rdk/user_modules/cpk-ae-lib"
 
@@ -27,13 +27,14 @@ export IES_API_DIR = "${WORKDIR}/rdk/user_modules/ies-api"
 export IES_API_BUILD_DIR = "${IES_API_DIR}"
 export IES_API_OUTPUT_DIR = "${IES_API_DIR}"
 export IES_API_CORE_DIR = "user_modules/ies-api/core"
+export OPENSSL_ROOT = "${STAGING_DIR_HOST}/usr"
 
 # Choose IES API mode of operation: "true" for SHM (shared-memory model)
 # which is the default or "false" for RPC (remote procedure call)
 export IES_ENABLE_SHM ?= "true"
 
 # Extra flags required by ies_api_install target from the main Makefile
-IES_EXTRA_FLAGS = "host_alias=x86_64-intelaxxia-linux"
+IES_EXTRA_FLAGS = "host_alias=${HOST_SYS}"
 
 # Overwrite IES_API_CFLAGS to unset global FORTIFY_SOURCE flag
 export IES_API_CFLAGS = "-g -Wno-unused-result -U_FORTIFY_SOURCE \
