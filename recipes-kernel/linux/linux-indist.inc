@@ -116,7 +116,17 @@ sysroot_stage_all_append() {
 
         install -d ${KLM_HEADERS}
         mv ${KERNEL_HEADERS}/include/linux/adf_cfg*.h ${KLM_HEADERS}
-        mv ${KERNEL_HEADERS}/include/linux/hqm_user.h ${KLM_HEADERS}
+
+	# hqm gets renamed dlb in newer versions of HQM...
+	if [ -e ${KERNEL_HEADERS}/include/linux/hqm_user.h ]
+	then
+		mv ${KERNEL_HEADERS}/include/linux/hqm_user.h ${KLM_HEADERS}
+	fi
+	if [ -e ${KERNEL_HEADERS}/include/linux/dlb_user.h ]
+	then
+		mv ${KERNEL_HEADERS}/include/linux/dlb_user.h ${KLM_HEADERS}
+	fi
+
         mv ${KERNEL_HEADERS}/include/linux/ice_sw_ae*.h ${KLM_HEADERS}
         mv ${KERNEL_HEADERS}/include/linux/adk_netd*.h ${KLM_HEADERS}
     fi
